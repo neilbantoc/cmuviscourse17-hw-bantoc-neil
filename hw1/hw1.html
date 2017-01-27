@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Neil Bantoc Assign 1</title>
+    <style>
+      .front-and-center{
+        height: 640px;
+        width: 640px;
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        background-color: #ffffff;
+      }
+
+      .visualizations svg{
+        display: block;
+          margin: auto;
+          margin-top: 1em;
+          height: 600px;
+          width: 600px;
+          /*transform: scaleY(-1);*/
+      }
+
+      .bar rect{
+        fill: #89BBFE;
+        stroke: #202020;
+        stroke-width: 4px;
+        transform: translateY(25);
+        height: 40px;
+      }
+    </style>
+</head>
+<body bgcolor="#fafafa">
+  <div class="front-and-center visualizations">
+    <svg>
+      <!-- x=600, 1 unit of x = 600/12 = 40, margin = 12.3 -->
+      <!-- formula for x: ((40 + 12.3) * x) + 12.3 -->
+      <!-- y=285, 1 unit of y = 285/15 = 19, margin = 30-->
+      <!-- formula for y: 19 * y -->
+      <g class="bar">
+        <!-- 10 -->
+        <rect x="2" y="12.3px" width="190px"/>
+
+        <!-- 8 -->
+        <rect x="2" y="64.6px" width="152px"/>
+
+        <!-- 13 -->
+        <rect x="2" y="116.9px" width="247px"/>
+
+        <!-- 9 -->
+        <rect x="2" y="169.2px" width="171px"/>
+
+        <!-- 11 -->
+        <rect x="2" y="221.5px" width="209px"/>
+
+        <!-- 14 -->
+        <rect x="2" y="273.8px" width="266px"/>
+
+        <!-- 6 -->
+        <rect x="2" y="326.1px" width="114px"/>
+
+        <!-- 4 -->
+        <rect x="2" y="378.4px" width="76px"/>
+
+        <!-- 12 -->
+        <rect x="2" y="430.7px" width="228px"/>
+
+        <!-- 7 -->
+        <rect x="2" y="483px" width="133px"/>
+
+        <!-- 5 -->
+        <rect x="2" y="535.3px" width="95px"/>
+      </g>
+
+      <g class="bar" x="38">
+      </g>
+    </svg>
+  </div>
+</body>
+</html>
