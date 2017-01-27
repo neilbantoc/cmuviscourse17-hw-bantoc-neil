@@ -1,3 +1,6 @@
+**Name: ** Neil Bantoc
+**Email: ** nbantoc@andrew.cmu.edu
+
 # Visualization in HCI Homework 1
 
 *Due Monday, January 30, 12:00pm (noon)*
@@ -47,7 +50,7 @@ This is one of the datasets from Anscombe's quartet that we discussed in Lecture
 
 Implement your solution in a file called ``hw1.html``, which you should store in the top-level directory of the homework 1 (hw1) folder. At the top of the file add "Visualization in HCI Homework 1", your name and your e-mail address. Use the proper HTML elements to structure this information and use headings to label your charts.
 
-You can choose your design parameters freely, i.e., things like the color, aspect ratio and size of your charts is up to you. You need to make sure, however, that the data can be clearly read.  Note that you will probably need to make some kind of transformation to the data to achieve pleasant results.  
+You can choose your design parameters freely, i.e., things like the color, aspect ratio and size of your charts is up to you. You need to make sure, however, that the data can be clearly read.  Note that you will probably need to make some kind of transformation to the data to achieve pleasant results.
 
 You must use selectors to style your SVG elements, i.e., you should not use inline styling. You should also not use classes or identifiers more than necessary for each chart, i.e., one class definition per chart should be sufficient.  There are good reasons to use both, css class selectors and element selectors in this homework.
 
