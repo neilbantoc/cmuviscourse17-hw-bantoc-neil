@@ -51,6 +51,11 @@
         x: 0;
         y: 0;
       }
+
+      .scatterplot circle{
+        r: 0.25px;
+        fill: #89BBFE;
+      }
     </style>
 </head>
 <body bgcolor="#fafafa">
@@ -204,6 +209,31 @@
       L 552, 246.4
       L 580, 263.6
       L 580, 0" />
+    </svg>
+
+    <br />
+
+    <svg class="scatterplot" >
+      <rect class="border"/>
+      <g transform="translate(0, 600) scale(35, -35)">
+        <!-- x = 550, y = 550, 1 unit = 50 -->
+        <!-- formula for x: x * 50 -->
+        <!-- formula for y: y * 50 -->
+        <!-- X: 10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5 -->
+        <!-- Y: 8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68 -->
+        <!-- I got lazy and just used transform despite figuring out the formula -->
+        <circle cx="10" cy="8.04"/>
+        <circle cx="8" cy="6.95"/>
+        <circle cx="13" cy="7.58"/>
+        <circle cx="9" cy="8.81"/>
+        <circle cx="11" cy="8.33"/>
+        <circle cx="14" cy="9.96"/>
+        <circle cx="6" cy="7.24"/>
+        <circle cx="4" cy="4.26"/>
+        <circle cx="12" cy="10.84"/>
+        <circle cx="7" cy="4.82"/>
+        <circle cx="5" cy="5.68"/>
+      </g>
     </svg>
   </div>
 </body>
