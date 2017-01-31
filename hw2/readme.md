@@ -10,7 +10,7 @@ We are going to compare several attributes of every World Cup since 1930.
 
 The interactive **bar chart** will allow us to see the evolution of attendance, total number of goals, the number of games, and the number of participating countries over the years.
 
-Future homework assignments link these bar charts to other dimenions of interest, such as maps and detailed information panels.
+Future homework assignments link these bar charts to other dimensions of interest, such as maps and detailed information panels.
 
 ## Implementation
 
