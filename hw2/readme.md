@@ -43,7 +43,7 @@ Remember, to be able to access the data files with javascript, you will need to 
     # python 3
     python -m http.server
 
-And you can view the page at [http://localhost:8080](http://localhost:8080)
+And you can view the page at [http://localhost:8000](http://localhost:8000)
 
 ## About the data
 
