@@ -84,6 +84,7 @@ header {
     clear: left;
     text-align: left;
     height: 100px;
+    max-width: 1024px;
 }
 
 #logo {

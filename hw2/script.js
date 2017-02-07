@@ -1,6 +1,12 @@
 // Global var for FIFA world cup data
 var allWorldCupData;
 
+var DIMENSION_ATTENDANCE = 'attendance';
+var DIMENSION_TEAMS = 'teams';
+var DIMENSION_MATCHES = 'matches';
+var DIMENSION_GOALS = 'goals';
+var DIMENSION_YEARS = 'years';
+
 /**
  * Render and update the bar chart based on the selection of the data type in the drop-down box
  *
@@ -8,20 +14,95 @@ var allWorldCupData;
  */
 function updateBarChart(selectedDimension) {
 
-    var svgBounds = d3.select("#barChart").node().getBoundingClientRect(),
-        xAxisWidth = 100,
-        yAxisHeight = 70;
+    var svg = d3.select("#barChart");
 
-    // ******* TODO: PART I *******
+    var svgBounds = d3.select("#barChart").node().getBoundingClientRect();
+    var xAxisWidth = 100;
+    var yAxisHeight = 70;
 
-    // Create the x and y scales; make
-    // sure to leave room for the axes
+    var graphHeight = svgBounds.height - yAxisHeight;
+    var graphWidth = svgBounds.width - xAxisWidth;
 
-    // Create colorScale
+    // Get working data based on dimension
+    var workingData = retrieveDimension(selectedDimension);
+    var years = retrieveDimension(DIMENSION_YEARS);
 
-    // Create the axes (hint: use #xAxis and #yAxis)
+    // To make life easier, let's flip the graph vertically and horizontally
+    // Let's also translate the graph a bit so that we have space for the y axis
+    svg.select("#bars")
+      .attr("transform", "translate(" + (graphWidth + xAxisWidth + 1) + ", " + graphHeight + ") scale(-1, -1)");
 
-    // Create the bars (hint: use #bars)
+    // ##### Create scales for  #####
+
+    var xScale = d3.scaleLinear()
+        .domain([d3.min(years), d3.max(years)])
+        .range([0, graphWidth]);
+
+    var yScale = d3.scaleLinear()
+        .domain([0, d3.max(workingData)])
+        .range([0, graphHeight]);
+
+    var colorScale = d3.scaleLinear()
+        .domain([d3.min(workingData), d3.max(workingData)])
+        .range([d3.rgb("#A4C2A5"),d3.rgb("#566246")]);
+
+    // ##### Create Bars #####
+
+    // Get all existing bars
+    var bars = svg.select("#bars").selectAll("rect")
+      .data(workingData);
+
+    // Handle creating new bars for new data + pre-style
+    bars = bars.enter()
+      .append("rect")
+      .style("fill", function (d) {
+        return colorScale(d);
+      })
+      .merge(bars);
+
+    // Handle exiting bars
+    bars.exit()
+      .transition()
+      .duration(1000)
+      .remove();
+
+    // Style bars according to data
+    bars.attr("x", function(d, i) {
+        return graphWidth/workingData.length * i;
+      })
+      .attr("y", function(d, i) {
+        return 0;
+      })
+      .attr("width", function (d, i) {
+        return graphWidth/workingData.length;
+      })
+      .transition()
+      .duration(1000)
+      .attr("height", function (d, i) {
+        return yScale(d);
+      })
+      .style("fill", function (d) {
+        return colorScale(d);
+      });
+
+    // Get Labels
+
+    // ##### Create Labels #####
+
+    var yScaleReverse = d3.scaleLinear()
+        .domain([0, d3.max(workingData)])
+        .range([graphHeight, 0]);
+
+    var yAxis = d3.axisLeft(yScaleReverse);
+
+    var xScaleAxis = d3.scaleBand()
+        .domain(years)
+        .range([graphWidth, 0]);
+
+    var xAxis = d3.axisLeft(xScaleAxis);
+
+    svg.select("#yAxis").attr("transform", "translate(" + xAxisWidth + ", 0)").transition().duration(1000).call(yAxis);
+    svg.select("#xAxis").attr("transform", "translate(" + xAxisWidth+ ", " + graphHeight + ") rotate(-90)").transition().duration(1000).call(xAxis);
 
     // ******* TODO: PART II *******
 
@@ -33,6 +114,31 @@ function updateBarChart(selectedDimension) {
 
 }
 
+function retrieveDimension(dimension) {
+  var dataPoints = [];
+
+  for (var i = 0; i < allWorldCupData.length; i++) {
+    dataPoints.push(retrieveDataForDimension(allWorldCupData[i], dimension));
+  }
+
+  return dataPoints;
+}
+
+function retrieveDataForDimension(dataEntry, dimension) {
+  switch (dimension) {
+    case DIMENSION_ATTENDANCE:
+      return dataEntry.attendance;
+    case DIMENSION_GOALS:
+      return dataEntry.goals;
+    case DIMENSION_TEAMS:
+      return dataEntry.teams;
+    case DIMENSION_MATCHES:
+      return dataEntry.matches;
+    case DIMENSION_YEARS:
+      return dataEntry.year;
+  }
+}
+
 /**
  *  Check the drop-down box for the currently selected data type and update the bar chart accordingly.
  *
@@ -40,11 +146,8 @@ function updateBarChart(selectedDimension) {
  *  goals, matches, attendance and teams.
  */
 function chooseData() {
-
-    // ******* TODO: PART I *******
-    //Changed the selected data when a user selects a different
-    // menu item from the drop down.
-
+    var dimension = d3.select("#dataset").node().value;
+    updateBarChart(dimension);
 }
 
 /* DATA LOADING */
@@ -78,5 +181,5 @@ d3.csv("data/fifa-world-cup.csv", function (error, csv) {
     // Store csv data in a global variable
     allWorldCupData = csv;
     // Draw the Bar chart for the first time
-    updateBarChart('attendance');
+    updateBarChart(DIMENSION_ATTENDANCE);
 });
