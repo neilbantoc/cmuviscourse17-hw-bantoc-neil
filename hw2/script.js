@@ -9,6 +9,8 @@ var DIMENSION_MATCHES = 'matches';
 var DIMENSION_GOALS = 'goals';
 var DIMENSION_YEARS = 'years';
 
+var SELECTED_ID = "selected";
+
 var colorScale;
 
 var selectBar = function (d, i) {
@@ -16,10 +18,12 @@ var selectBar = function (d, i) {
     selectedBar.style("fill", function (d) {
       return colorScale(d);
     })
+    .attr("id", null);
   }
 
   selectedBar = d3.select(this);
-  selectedBar.style("fill", "#A4303F");
+  selectedBar.style("fill", "#A4303F")
+    .attr("id", SELECTED_ID);
 
   console.log(allWorldCupData[i]);
 }
@@ -112,7 +116,15 @@ function updateBarChart(selectedDimension) {
         return yScale(d);
       })
       .style("fill", function (d) {
-        return colorScale(d);
+        console.log("This");
+        console.log(d3.select(this));
+        console.log("Selected");
+        console.log(selectedBar);
+        if (d3.select(this).attr("id") == SELECTED_ID) {
+          return "#A4303F";
+        } else {
+          return colorScale(d);
+        }
       });
 
     // ##### Create Labels #####
