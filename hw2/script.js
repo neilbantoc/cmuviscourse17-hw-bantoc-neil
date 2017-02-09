@@ -11,6 +11,8 @@ var DIMENSION_YEARS = 'years';
 
 var SELECTED_ID = "selected";
 
+var PADDING = 1;
+
 var colorScale;
 
 var selectBar = function (d, i) {
@@ -102,13 +104,13 @@ function updateBarChart(selectedDimension) {
         }
       })
       .attr("x", function(d, i) {
-        return graphWidth/workingData.length * i;
+        return (graphWidth/workingData.length * i) + PADDING;
       })
       .attr("y", function(d, i) {
-        return 0;
+        return PADDING;
       })
       .attr("width", function (d, i) {
-        return graphWidth/workingData.length;
+        return (graphWidth/workingData.length) - (PADDING * 2);
       })
       .transition()
       .duration(1000)
@@ -142,7 +144,7 @@ function updateBarChart(selectedDimension) {
     var xAxis = d3.axisLeft(xScaleAxis);
 
     svg.select("#yAxis").attr("transform", "translate(" + xAxisWidth + ", 0)").transition().duration(1000).call(yAxis);
-    svg.select("#xAxis").attr("transform", "translate(" + xAxisWidth+ ", " + graphHeight + ") rotate(-90)").transition().duration(1000).call(xAxis);
+    svg.select("#xAxis").attr("transform", "translate(" + xAxisWidth+ ", " + (graphHeight + 1) + ") rotate(-90)").transition().duration(1000).call(xAxis);
 
     // ******* TODO: PART II *******
 
