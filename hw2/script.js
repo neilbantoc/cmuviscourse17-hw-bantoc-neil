@@ -1,11 +1,28 @@
 // Global var for FIFA world cup data
 var allWorldCupData;
 
+var selectedBar = null;
+
 var DIMENSION_ATTENDANCE = 'attendance';
 var DIMENSION_TEAMS = 'teams';
 var DIMENSION_MATCHES = 'matches';
 var DIMENSION_GOALS = 'goals';
 var DIMENSION_YEARS = 'years';
+
+var colorScale;
+
+var selectBar = function (d, i) {
+  if (selectedBar != null) {
+    selectedBar.style("fill", function (d) {
+      return colorScale(d);
+    })
+  }
+
+  selectedBar = d3.select(this);
+  selectedBar.style("fill", "#A4303F");
+
+  console.log(allWorldCupData[i]);
+}
 
 /**
  * Render and update the bar chart based on the selection of the data type in the drop-down box
@@ -42,7 +59,7 @@ function updateBarChart(selectedDimension) {
         .domain([0, d3.max(workingData)])
         .range([0, graphHeight]);
 
-    var colorScale = d3.scaleLinear()
+    colorScale = d3.scaleLinear()
         .domain([d3.min(workingData), d3.max(workingData)])
         .range([d3.rgb("#A4C2A5"),d3.rgb("#566246")]);
 
@@ -67,7 +84,20 @@ function updateBarChart(selectedDimension) {
       .remove();
 
     // Style bars according to data
-    bars.attr("x", function(d, i) {
+    bars.attr("class", "graph-bar")
+      .on('click', selectBar)
+      .on('mouseover', function(d) {
+        d3.select(this).style("fill", "#DB5461");
+      })
+      .on('mouseout', function(d) {
+        d3.select(this).style("fill", function (d) {
+          return colorScale(d);
+        });
+        if (selectedBar != null) {
+            selectedBar.style("fill", "#A4303F");
+        }
+      })
+      .attr("x", function(d, i) {
         return graphWidth/workingData.length * i;
       })
       .attr("y", function(d, i) {
@@ -84,8 +114,6 @@ function updateBarChart(selectedDimension) {
       .style("fill", function (d) {
         return colorScale(d);
       });
-
-    // Get Labels
 
     // ##### Create Labels #####
 
