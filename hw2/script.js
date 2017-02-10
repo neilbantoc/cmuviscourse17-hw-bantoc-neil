@@ -118,10 +118,6 @@ function updateBarChart(selectedDimension) {
         return yScale(d);
       })
       .style("fill", function (d) {
-        console.log("This");
-        console.log(d3.select(this));
-        console.log("Selected");
-        console.log(selectedBar);
         if (d3.select(this).attr("id") == SELECTED_ID) {
           return "#A4303F";
         } else {
