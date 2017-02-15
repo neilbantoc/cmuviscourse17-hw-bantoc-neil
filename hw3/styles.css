@@ -40,6 +40,7 @@
 
 /*Map grid style*/
 .grat {
+    fill: none;
     stroke: grey;
     stroke-width: 1px;
     opacity: .2;
@@ -108,7 +109,6 @@ header {
 
 .view {
     padding: 0.5em;
-
 }
 
 #bar-chart {

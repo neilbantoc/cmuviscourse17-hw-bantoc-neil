@@ -141,15 +141,6 @@ function updateBarChart(selectedDimension) {
 
     svg.select("#yAxis").attr("transform", "translate(" + xAxisWidth + ", 0)").transition().duration(1000).call(yAxis);
     svg.select("#xAxis").attr("transform", "translate(" + xAxisWidth+ ", " + (graphHeight + 1) + ") rotate(-90)").transition().duration(1000).call(xAxis);
-
-    // ******* TODO: PART II *******
-
-    // Implement how the bars respond to click events
-    // Color the selected bar to indicate is has been selected.
-    // Make sure only the selected bar has this new color.
-
-    // Output the selected bar to the console using console.log()
-
 }
 
 function retrieveDimension(dimension) {
