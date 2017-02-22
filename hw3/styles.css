@@ -111,6 +111,18 @@ header {
     padding: 0.5em;
 }
 
+#map-view {
+  float:left;
+}
+
+#map-view svg{
+  float:left;
+}
+
+#map-view h2{
+  float:left;
+}
+
 #bar-chart {
     float: left;
     width: 500px;
