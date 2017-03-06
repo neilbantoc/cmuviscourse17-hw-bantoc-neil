@@ -438,10 +438,7 @@ function createTree(treeData) {
     .text(function(d) {
         return d["data"]["data"]["Team"];
       }
-    )
-    .on("mouseover", function(d) {
-      console.log(d["data"]["data"]);
-    });
+    );
 }
 
 /**
@@ -471,11 +468,19 @@ function updateTree(row) {
           classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"];
         } else {
           classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Opponent"] == row["value"]["Opponent"]
-            || (d["data"]["data"]["id"].includes(row["value"]["Opponent"]) &&  + d["data"]["data"]["id"].includes(row["key"]));
+            || matchesId(d, row["value"]["Opponent"], row["key"]);
+
+          if (!classed && d.children != undefined) {
+            classed = classed || matchesId(d.children[0], row["value"]["Opponent"], row["key"])
+              || matchesId(d.children[1], row["value"]["Opponent"], row["key"]);
+          }
         }
-        console.log(d.descendants());
         return classed;
       });
+}
+
+function matchesId(node, team1, team2) {
+  return node["data"]["data"]["id"].includes(team1) &&  + node["data"]["data"]["id"].includes(team2);
 }
 
 /**
