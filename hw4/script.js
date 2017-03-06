@@ -351,8 +351,8 @@ function updateList(i) {
       Array.prototype.splice.apply(tableElements, args);
       // add games
     }
+    updateTable();
   }
-  updateTable();
 }
 
 function isAggregate(objectClicked) {
@@ -473,8 +473,7 @@ function updateTree(row) {
           classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Opponent"] == row["value"]["Opponent"]
             || (d["data"]["data"]["id"].includes(row["value"]["Opponent"]) &&  + d["data"]["data"]["id"].includes(row["key"]));
         }
-        console.log(d["data"]["data"])
-        console.log(row);
+        console.log(d.descendants());
         return classed;
       });
 }
