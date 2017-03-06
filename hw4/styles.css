@@ -27,6 +27,8 @@ tbody th{
 
 .aggregate{
     color: #317f19;
+    text-align: right;
+    font-weight: bold;
 }
 
 .game{
@@ -111,6 +113,14 @@ header {
     r:5;
 }
 
+.aggregateBar{
+    opacity:0.6;
+}
+
+.aggregateCircle{
+    stroke-width: 3px;
+}
+
 
 .node circle {
     fill: #be2714;
@@ -151,5 +161,3 @@ header {
     padding: 0.5em;
     float: left;
 }
-
-

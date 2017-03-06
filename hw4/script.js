@@ -87,15 +87,14 @@ var maxGames = d3.max(teamData, function(d) {
 
 gameScale = gameScale.domain([0, maxGames]);
 
-console.log("Graph Length");
-console.log(gameScale(1));
-
 aggregateColorScale = aggregateColorScale.domain([0, maxGames]);
 
 d3.select("#goalHeader").append("svg")
-    .attr("height", cellHeight + cellBuffer).attr("width", 2 * cellWidth)
+    .attr("height", cellHeight + cellBuffer)
+    .attr("width", 2 * cellWidth)
     .append("g")
-    .attr("height", cellHeight + cellBuffer).attr("width", 2 * cellWidth)
+    .attr("height", cellHeight + cellBuffer)
+    .attr("width", 2 * cellWidth)
     .attr("transform", "translate(0, " + cellHeight + ")")
     .call(d3.axisTop(goalScale));
 
@@ -111,17 +110,13 @@ tableElements = teamData;
  */
 function updateTable() {
 
-// Select all rows for each corresponding table element
+// Create and assign a row for each data point in table elements
 var tableRows = d3.select("#matchTable").select("tbody")
     .selectAll("tr")
     .data(tableElements);
-
-// Create a row for new elements
 tableRows = tableRows.enter()
     .append("tr")
     .merge(tableRows);
-
-// Remove rows for deleted elements
 tableRows.exit().remove();
 
 
@@ -130,33 +125,31 @@ tableRows.exit().remove();
 // column that we'll add. Select all columns for each data point.
 var tableColumns = tableRows.selectAll("td").data(function(d, i) {
   var columnData = [];
-  columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["key"]});
-  columnData.push({"type":d["value"]["type"], "vis":"goals", "value":d["value"]});
+  columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["key"], "is_country": true});
+  columnData.push({"type":d["value"]["type"], "vis":"goals", "value": d["value"]});
   columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["value"]["Result"]["label"]});
   columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Wins"]});
   columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Losses"]});
   columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["TotalGames"]});
   return columnData;
 });
-
-// Create new columns for each new column
 tableColumns = tableColumns.enter()
     .append("td")
     .merge(tableColumns);
-
-// Remove columns for deleted columns
 tableColumns.exit().remove();
 
 
 
 // Update all text columns
-var textColumns = tableColumns.filter(function(d) {
-  return d.vis == "text";
-});
-
-textColumns.text(function(d) {
-  return d.value;
-});
+tableColumns.filter(function(d) {
+    return d.vis == "text";
+  })
+  .classed("aggregate", function(d) {
+    return d["is_country"] != undefined && d["is_country"] == true;
+  })
+  .text(function(d) {
+    return d.value;
+  });
 
 
 
@@ -196,9 +189,67 @@ svg.append("text")
 
 
 // Update all goal columns
-var goalColumns = tableColumns.filter(function(d) {
-  return d.vis == "goals";
-});
+svg = tableColumns.filter(function(d) {
+    return d.vis == "goals";
+  })
+  .append("svg")
+  .attr("height", cellHeight)
+  .attr("width", 2 * cellWidth);
+
+// create bar
+var bar = svg
+  .selectAll("rect")
+  .data(function(d) {
+    var goalData = [];
+    var barStart = goalScale(Math.min(d["value"]["Goals Made"], d["value"]["Goals Conceded"]));
+    var barWidth = goalScale(Math.max(d["value"]["Goals Made"], d["value"]["Goals Conceded"])) - barStart;
+    var color = d["value"]["Delta Goals"] > 0 ? "#004174" : "#DE0001";
+    goalData.push({"start": barStart, "width": barWidth, "color": color});
+    return goalData;
+  });
+
+bar = bar.enter().append("rect")
+  .classed("aggregateBar", true)
+  .attr("y", 0)
+  .attr("height", cellHeight)
+  .merge(bar);
+
+bar.exit().remove();
+
+bar.attr("x", function(d) {
+  return d["start"];
+  })
+  .attr("width", function(d) {
+    return d["width"];
+  })
+  .attr("fill", function(d) {
+    return d["color"];
+  });
+
+// create circles
+var circles = svg
+  .selectAll("circle")
+  .data(function(d) {
+    var goalData = [];
+    goalData.push({"value": d["value"]["Goals Made"], "color": "#004174"});
+    goalData.push({"value": d["value"]["Goals Conceded"], "color": "#DE0001"});
+    return goalData;
+  });
+circles = circles.enter()
+  .append("circle")
+  .classed("aggregateCircle", true)
+  .merge(circles);
+circles.exit().remove();
+
+circles.attr("cx", function(d) {
+    return goalScale(d["value"]);
+  })
+  .attr("cy", cellHeight/2)
+  .attr("r", cellHeight/2)
+  .attr("fill", function(d) {
+    return d["color"];
+  });
+
 
 };
 
