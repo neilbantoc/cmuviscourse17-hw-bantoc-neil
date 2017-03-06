@@ -9,7 +9,8 @@ var tableElements;
 var cellWidth = 70,
     cellHeight = 20,
     cellBuffer = 15,
-    barHeight = 20;
+    barHeight = 20,
+    gameCircleRadius = 3;
 
 /**Set variables for commonly accessed data columns*/
 var goalsMadeHeader = 'Goals Made',
@@ -104,156 +105,217 @@ tableElements = teamData;
 
 }
 
+function createAndUpdateRows() {
+  // Create and assign a row for each data point in table elements
+  var tableRows = d3.select("#matchTable").select("tbody")
+      .selectAll("tr")
+      .data(tableElements);
+  tableRows.exit().remove();
+  tableRows = tableRows.enter()
+      .append("tr")
+      .merge(tableRows);
+  tableRows.on("click", function(d, i) {
+    updateList(i);
+  });
+  return tableRows;
+}
+
+function createAndUpdateColumns(tableRows) {
+  // For each row, pick out and create an array that will serve as data for each
+  // column that we'll add. Select all columns for each data point.
+  var tableColumns = tableRows.selectAll("td").data(function(d, i) {
+    var columnData = [];
+    columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["key"], "is_country": true});
+    columnData.push({"type":d["value"]["type"], "vis":"goals", "value": d["value"]});
+    columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["value"]["Result"]["label"]});
+    columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Wins"]});
+    // columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Losses"]});
+    // columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["TotalGames"]});
+    return columnData;
+  });
+  tableColumns.exit().remove();
+
+  // create new td elements for new columns
+  var newColumns = tableColumns.enter().append("td");
+
+  var svg;
+  // filter new columns for ones with a bar
+  var newBarColumns = newColumns.filter(function(d) {
+    return d.vis == "bar";
+  });
+  // create new svg elements for all new bar columns
+  svg = newBarColumns.append("svg")
+    .attr("height", cellHeight)
+    .attr("width", cellWidth);
+  svg.append("rect");
+  svg.append("text");
+
+  // filter new columns for ones with a goal
+  var newGoalColumns = newColumns.filter(function(d) {
+      return d.vis == "goals";
+  });
+
+  // create new svg elements for all new goal columns
+  svg = newGoalColumns.append("svg")
+    .attr("height", cellHeight)
+    .attr("width", 2 * cellWidth)
+  svg.append("rect");
+  svg.append("circle");
+  svg.append("circle");
+
+  // merge new columns with existing columns
+  tableColumns = tableColumns.merge(newColumns);
+  return tableColumns;
+}
+
+function updateTextColumns(tableColumns) {
+  // Update all text columns
+  var textColumns = tableColumns.filter(function(d) {
+      return d.vis == "text";
+    });
+
+  textColumns.classed("aggregate", function(d) {
+    return d["type"] == "aggregate" && d["is_country"] != undefined && d["is_country"] == true;
+  })
+  .classed("game", function(d) {
+    return d["type"] == "game" && d["is_country"] != undefined && d["is_country"] == true;
+  })
+  .text(function(d) {
+    return (d["type"] == "game" && d["is_country"] != undefined && d["is_country"] ? "x" : "") + d.value;
+  });
+}
+
+function updateBarColumns(tableColumns) {
+  // Update all bar columns
+  var barColumns = tableColumns.filter(function(d) {
+    return d.vis == "bar";
+  });
+
+  var svg = barColumns.select("svg");
+
+  svg.selectAll("rect")
+    .data(function(d) {
+      return [d];
+    })
+    .attr("height", cellHeight)
+    .attr("width", function(d) {
+      return gameScale(d.value);
+    })
+    .attr("fill", function(d){
+      return aggregateColorScale(d.value);
+    });
+
+  svg.selectAll("text")
+    .data(function(d) {
+      return [d];
+    })
+    .attr("x", function(d) {
+      return gameScale(d.value) + (d.value < 2 ? 2 : -2);
+    })
+    .attr("y", "50%")
+    .attr("alignment-baseline", "middle")
+    .attr("text-anchor", function(d) {
+      return d.value < 2 ? "start" : "end";
+    })
+    .attr("fill", function(d) {
+      return d.value < 2 ? "#000000" : "#ffffff";
+    })
+    .text(function(d){
+      return d.value + "";
+    });
+}
+
+function updateGoalColumns(tableColumns) {
+    goalColumns = tableColumns.filter(function(d) {
+        return d.vis == "goals";
+    });
+
+    svg = goalColumns.select("svg");
+
+    // create bar
+    var bar = svg
+      .selectAll("rect")
+      .data(function(d) {
+        var goalData = [];
+
+        var type = d["value"]["type"];
+        var offset = type == "game" ? gameCircleRadius : 0;
+        var barStart = goalScale(Math.min(d["value"]["Goals Made"], d["value"]["Goals Conceded"])) + offset;
+        var barWidth = goalScale(Math.max(d["value"]["Goals Made"], d["value"]["Goals Conceded"])) - barStart - offset;
+        var color = d["value"]["Delta Goals"] > 0 ? "#004174" : "#DE0001";
+
+        goalData.push({"type": type, "start": barStart, "width": barWidth, "color": color});
+        return goalData;
+      });
+
+    bar.attr("x", function(d) {
+      return d["start"];
+      })
+      .attr("y", function(d) {
+        return d["type"] == "aggregate" ? 0 : cellBuffer/2;
+      })
+      .attr("width", function(d) {
+        return d["width"];
+      })
+      .attr("fill", function(d) {
+        return d["color"];
+      })
+      .classed("aggregateBar", function(d) {
+          return d["type"] == "aggregate";
+      })
+      .classed("goalBar", function(d) {
+          return d["type"] == "goal";
+      })
+      .attr("height", function(d) {
+        return d["type"] == "aggregate" ? cellHeight : cellHeight - cellBuffer;
+      });
+
+    // create circles
+    var circles = svg
+      .selectAll("circle")
+      .data(function(d) {
+        var goalData = [];
+        goalData.push({"type": d["type"], "value": d["value"]["Goals Conceded"], "color": "#DE0001"});
+        goalData.push({"type": d["type"], "value": d["value"]["Goals Made"], "color": "#004174"});
+        return goalData;
+      });
+
+    circles.exit().remove();
+
+    circles = circles.enter()
+      .append("circle")
+      .merge(circles);
+
+    circles.attr("cx", function(d) {
+        return goalScale(d["value"]);
+      })
+      .attr("cy", cellHeight/2)
+      .attr("stroke-width", function(d) {
+        return d["type"] == "aggregate" ? "0px" : gameCircleRadius + "px";
+      })
+      .attr("r", function(d) {
+        return d["type"] == "aggregate" ? cellHeight/2 : cellHeight - cellBuffer;
+      })
+      .attr("fill", function(d) {
+        return d["type"] == "aggregate" ? d["color"] : "none";
+      })
+      .attr("stroke", function(d) {
+        return d["type"] == "game" ? d["color"] : "none";
+      })
+      ;
+}
+
 /**
  * Updates the table contents with a row for each element in the global variable tableElements.
  *
  */
 function updateTable() {
+  var tableRows = createAndUpdateRows();
+  var tableColumns = createAndUpdateColumns(tableRows);
 
-// Create and assign a row for each data point in table elements
-var tableRows = d3.select("#matchTable").select("tbody")
-    .selectAll("tr")
-    .data(tableElements);
-tableRows = tableRows.enter()
-    .append("tr")
-    .merge(tableRows);
-tableRows.exit().remove();
-tableRows.on("click", function(d, i) {
-  console.log(d);
-});
-
-
-
-// For each row, pick out and create an array that will serve as data for each
-// column that we'll add. Select all columns for each data point.
-var tableColumns = tableRows.selectAll("td").data(function(d, i) {
-  var columnData = [];
-  columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["key"], "is_country": true});
-  columnData.push({"type":d["value"]["type"], "vis":"goals", "value": d["value"]});
-  columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["value"]["Result"]["label"]});
-  columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Wins"]});
-  columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Losses"]});
-  columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["TotalGames"]});
-  return columnData;
-});
-tableColumns = tableColumns.enter()
-    .append("td")
-    .merge(tableColumns);
-tableColumns.exit().remove();
-
-
-
-// Update all text columns
-tableColumns.filter(function(d) {
-    return d.vis == "text";
-  })
-  .classed("aggregate", function(d) {
-    return d["is_country"] != undefined && d["is_country"] == true;
-  })
-  .text(function(d) {
-    return d.value;
-  });
-
-
-
-// Update all bar columns
-var barColumns = tableColumns.filter(function(d) {
-  return d.vis == "bar";
-});
-
-var svg = barColumns.append("svg")
-  .attr("height", cellHeight)
-  .attr("width", cellWidth);
-
-svg.append("rect")
-  .attr("height", cellHeight)
-  .attr("width", function(d) {
-    return gameScale(d.value);
-  })
-  .attr("fill", function(d){
-    return aggregateColorScale(d.value);
-  });
-
-svg.append("text")
-  .attr("x", function(d) {
-    return gameScale(d.value) + (d.value < 2 ? 2 : -2);
-  })
-  .attr("y", "50%")
-  .attr("alignment-baseline", "middle")
-  .attr("text-anchor", function(d) {
-    return d.value < 2 ? "start" : "end";
-  })
-  .attr("fill", function(d) {
-    return d.value < 2 ? "#000000" : "#ffffff";
-  })
-  .text(function(d){
-    return d.value + "";
-  });
-
-
-// Update all goal columns
-svg = tableColumns.filter(function(d) {
-    return d.vis == "goals";
-  })
-  .append("svg")
-  .attr("height", cellHeight)
-  .attr("width", 2 * cellWidth);
-
-// create bar
-var bar = svg
-  .selectAll("rect")
-  .data(function(d) {
-    var goalData = [];
-    var barStart = goalScale(Math.min(d["value"]["Goals Made"], d["value"]["Goals Conceded"]));
-    var barWidth = goalScale(Math.max(d["value"]["Goals Made"], d["value"]["Goals Conceded"])) - barStart;
-    var color = d["value"]["Delta Goals"] > 0 ? "#004174" : "#DE0001";
-    goalData.push({"start": barStart, "width": barWidth, "color": color});
-    return goalData;
-  });
-
-bar = bar.enter().append("rect")
-  .classed("aggregateBar", true)
-  .attr("y", 0)
-  .attr("height", cellHeight)
-  .merge(bar);
-
-bar.exit().remove();
-
-bar.attr("x", function(d) {
-  return d["start"];
-  })
-  .attr("width", function(d) {
-    return d["width"];
-  })
-  .attr("fill", function(d) {
-    return d["color"];
-  });
-
-// create circles
-var circles = svg
-  .selectAll("circle")
-  .data(function(d) {
-    var goalData = [];
-    goalData.push({"value": d["value"]["Goals Conceded"], "color": "#DE0001"});
-    goalData.push({"value": d["value"]["Goals Made"], "color": "#004174"});
-    return goalData;
-  });
-circles = circles.enter()
-  .append("circle")
-  .classed("aggregateCircle", true)
-  .merge(circles);
-circles.exit().remove();
-
-circles.attr("cx", function(d) {
-    return goalScale(d["value"]);
-  })
-  .attr("cy", cellHeight/2)
-  .attr("r", cellHeight/2)
-  .attr("fill", function(d) {
-    return d["color"];
-  });
-
-
+  updateTextColumns(tableColumns);
+  updateBarColumns(tableColumns);
+  updateGoalColumns(tableColumns);
 };
 
 
@@ -273,10 +335,28 @@ function collapseList() {
  *
  */
 function updateList(i) {
+  var objectClicked = tableElements[i];
 
-    // tableElements =
+  if (isAggregate(objectClicked)) {
+    var games = objectClicked["value"]["games"];
+    if (i + 1 < tableElements.length && isGame(tableElements[i + 1])) {
+      tableElements.splice(i + 1, games.length);
+      // remove games
+    } else {
+      var args = [i + 1, 0].concat(games);
+      Array.prototype.splice.apply(tableElements, args);
+      // add games
+    }
+  }
+  updateTable();
+}
 
+function isAggregate(objectClicked) {
+  return objectClicked["value"] != undefined && objectClicked["value"]["type"] != undefined && objectClicked["value"]["type"] == "aggregate";
+}
 
+function isGame(objectClicked) {
+  return objectClicked["value"] != undefined && objectClicked["value"]["type"] != undefined && objectClicked["value"]["type"] == "game";
 }
 
 /**
