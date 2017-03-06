@@ -47,6 +47,8 @@ var rank = {
 
 d3.json('data/fifa-matches.json',function(error,data){
     teamData = data;
+    console.log("Team Data");
+    console.log(teamData);
     createTable();
     updateTable();
 })
@@ -72,7 +74,32 @@ d3.csv("data/fifa-tree.csv", function (error, csvData) {
  */
 function createTable() {
 
-// ******* TODO: PART II *******
+var maxGoals = d3.max(teamData, function(d) {
+  return d["value"]["Goals Made"];
+});
+
+// Set Domains for previously defined scales
+goalScale = goalScale.domain([0, maxGoals]);
+
+var maxGames = d3.max(teamData, function(d) {
+  return d["value"]["TotalGames"];
+});
+
+gameScale = gameScale.domain([0, maxGames]);
+
+console.log("Graph Length");
+console.log(gameScale(1));
+
+aggregateColorScale = aggregateColorScale.domain([0, maxGames]);
+
+d3.select("#goalHeader").append("svg")
+    .attr("height", cellHeight + cellBuffer).attr("width", 2 * cellWidth)
+    .append("g")
+    .attr("height", cellHeight + cellBuffer).attr("width", 2 * cellWidth)
+    .attr("transform", "translate(0, " + cellHeight + ")")
+    .call(d3.axisTop(goalScale));
+
+tableElements = teamData;
 
 // ******* TODO: PART V (Extra Credit) *******
 
@@ -84,7 +111,94 @@ function createTable() {
  */
 function updateTable() {
 
-// ******* TODO: PART III *******
+// Select all rows for each corresponding table element
+var tableRows = d3.select("#matchTable").select("tbody")
+    .selectAll("tr")
+    .data(tableElements);
+
+// Create a row for new elements
+tableRows = tableRows.enter()
+    .append("tr")
+    .merge(tableRows);
+
+// Remove rows for deleted elements
+tableRows.exit().remove();
+
+
+
+// For each row, pick out and create an array that will serve as data for each
+// column that we'll add. Select all columns for each data point.
+var tableColumns = tableRows.selectAll("td").data(function(d, i) {
+  var columnData = [];
+  columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["key"]});
+  columnData.push({"type":d["value"]["type"], "vis":"goals", "value":d["value"]});
+  columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["value"]["Result"]["label"]});
+  columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Wins"]});
+  columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Losses"]});
+  columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["TotalGames"]});
+  return columnData;
+});
+
+// Create new columns for each new column
+tableColumns = tableColumns.enter()
+    .append("td")
+    .merge(tableColumns);
+
+// Remove columns for deleted columns
+tableColumns.exit().remove();
+
+
+
+// Update all text columns
+var textColumns = tableColumns.filter(function(d) {
+  return d.vis == "text";
+});
+
+textColumns.text(function(d) {
+  return d.value;
+});
+
+
+
+// Update all bar columns
+var barColumns = tableColumns.filter(function(d) {
+  return d.vis == "bar";
+});
+
+var svg = barColumns.append("svg")
+  .attr("height", cellHeight)
+  .attr("width", cellWidth);
+
+svg.append("rect")
+  .attr("height", cellHeight)
+  .attr("width", function(d) {
+    return gameScale(d.value);
+  })
+  .attr("fill", function(d){
+    return aggregateColorScale(d.value);
+  });
+
+svg.append("text")
+  .attr("x", function(d) {
+    return gameScale(d.value) + (d.value < 2 ? 2 : -2);
+  })
+  .attr("y", "50%")
+  .attr("alignment-baseline", "middle")
+  .attr("text-anchor", function(d) {
+    return d.value < 2 ? "start" : "end";
+  })
+  .attr("fill", function(d) {
+    return d.value < 2 ? "#000000" : "#ffffff";
+  })
+  .text(function(d){
+    return d.value + "";
+  });
+
+
+// Update all goal columns
+var goalColumns = tableColumns.filter(function(d) {
+  return d.vis == "goals";
+});
 
 };
 
@@ -106,7 +220,7 @@ function collapseList() {
  */
 function updateList(i) {
 
-    // ******* TODO: PART IV *******
+    // tableElements =
 
 
 }
