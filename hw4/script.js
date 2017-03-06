@@ -118,6 +118,9 @@ tableRows = tableRows.enter()
     .append("tr")
     .merge(tableRows);
 tableRows.exit().remove();
+tableRows.on("click", function(d, i) {
+  console.log(d);
+});
 
 
 
@@ -231,8 +234,8 @@ var circles = svg
   .selectAll("circle")
   .data(function(d) {
     var goalData = [];
-    goalData.push({"value": d["value"]["Goals Made"], "color": "#004174"});
     goalData.push({"value": d["value"]["Goals Conceded"], "color": "#DE0001"});
+    goalData.push({"value": d["value"]["Goals Made"], "color": "#004174"});
     return goalData;
   });
 circles = circles.enter()
