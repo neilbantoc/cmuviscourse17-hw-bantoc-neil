@@ -117,6 +117,10 @@ function createAndUpdateRows() {
   tableRows.on("click", function(d, i) {
     updateList(i);
   });
+  tableRows.on("mouseover", function(d, i) {
+    clearTree();
+    updateTree(d);
+  })
   return tableRows;
 }
 
@@ -365,48 +369,6 @@ function isGame(objectClicked) {
  * @param treeData an array of objects that contain parent/child information.
  */
 function createTree(treeData) {
-
-  // var group = d3.select("#tree");
-  // var svgBounds = group.node().getBoundingClientRect();
-  // var width = svgBounds[0];
-  // var height = svgBounds[1];
-  //
-  // var tree = d3.tree()
-  //   .size(svgBounds);
-  //
-  // var treeData = d3.stratify()
-  //   .id(function(d) {
-  //     var id = d.id;
-  //     id = id.replace(d["Opponent"], "");
-  //     id = id.replace(d["Team"], "");
-  //     return id;
-  //   })
-  //   .parentId(function(d) {
-  //     return d.ParentGame;
-  //   })
-  //   (treeData);
-  //
-  // root = d3.hierarchy(treeData, function(d) { return d.children; });
-  // root.x0 = height / 2;
-  // root.y0 = 0;
-  //
-  // var treeData = tree(root);
-  //
-  // // Compute the new tree layout.
-  // var nodes = treeData.descendants();
-  // var links = treeData.descendants().slice(1);
-  //
-  // nodes.forEach(function(d){ d.y = d.depth * 180});
-  //
-  // var node = d3.selectAll('g.node')
-  //     .data(nodes, function(d) {return d.id});
-  //
-  // var nodeEnter = node.enter().append('g')
-  //     .attr('class', 'node')
-  //     .attr("transform", function(d) {
-  //       return "translate(" + source.y0 + "," + source.x0 + ")";
-  //   })
-
   var g = d3.select("#tree").attr("transform", "translate(100, 0)");
   var width = 300;
   var height = 900;
@@ -446,35 +408,35 @@ function createTree(treeData) {
          + "C" + (d.y + d.parent.y) / 2 + "," + d.x
          + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
          + " " + d.parent.y + "," + d.parent.x;
-       });
+     });
 
    // adds each node as a group
    var node = g.selectAll(".node")
-      .data(nodes.descendants())
-      .enter()
-      .append("g")
-      .classed("node", true)
-      .classed("winner", function(d) {
+    .data(nodes.descendants())
+    .enter()
+    .append("g")
+    .classed("node", true)
+    .classed("winner", function(d) {
         return d["data"]["data"]["Wins"] > 0;
-      })
-      .attr("transform", function(d) {
+    })
+    .attr("transform", function(d) {
         return "translate(" + d.y + "," + d.x + ")";
-      });
+    });
 
   // adds symbols as nodes
   node.append("circle")
       .attr("r", 5);
 
   node.append("text")
-  .attr("dy", ".35em")
-  .attr("x", function(d) {
-    return d.children ? -5 : 5;
-  })
-  .style("text-anchor", function(d) {
-    return d.children ? "end" : "start"; })
-  .text(function(d) {
-    return d["data"]["data"]["Team"]; });
-  };
+    .attr("dy", ".35em")
+    .attr("x", function(d) {
+        return d.children ? -5 : 5;
+    })
+    .style("text-anchor", function(d) {
+        return d.children ? "end" : "start"; })
+    .text(function(d) {
+        return d["data"]["data"]["Team"]; });
+    };
 
 /**
  * Updates the highlighting in the tree based on the selected team.
@@ -483,18 +445,38 @@ function createTree(treeData) {
  * @param team a string specifying which team was selected in the table.
  */
 function updateTree(row) {
+  d3.selectAll(".link")
+    .classed("selected", function(d) {
+      var classed = false;
+      if (row["value"]["type"] == "aggregate") {
+        classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Wins"] > 0;
+      } else {
+        console.log(d["data"]["data"]["Opponent"] + " | " + row["value"]["Opponent"]);
+        classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Opponent"] == row["value"]["Opponent"];
+      }
+      return classed;
+    });
 
-    // ******* TODO: PART VII *******
-
-
+  d3.selectAll(".node")
+    .select("text")
+      .classed("selectedLabel", function(d) {
+        var classed = false;
+        if (row["value"]["type"] == "aggregate") {
+          classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"];
+        } else {
+          classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Opponent"] == row["value"]["Opponent"];
+        }
+        return classed;
+      });
 }
 
 /**
  * Removes all highlighting from the tree.
  */
 function clearTree() {
+  d3.selectAll(".selected")
+    .classed("selected", false);
 
-    // ******* TODO: PART VII *******
-
-
+  d3.selectAll(".selectedLabel")
+    .classed("selectedLabel", false);
 }
