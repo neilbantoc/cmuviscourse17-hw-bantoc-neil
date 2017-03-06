@@ -433,10 +433,16 @@ function createTree(treeData) {
         return d.children ? -5 : 5;
     })
     .style("text-anchor", function(d) {
-        return d.children ? "end" : "start"; })
+        return d.children ? "end" : "start";
+    })
     .text(function(d) {
-        return d["data"]["data"]["Team"]; });
-    };
+        return d["data"]["data"]["Team"];
+      }
+    )
+    .on("mouseover", function(d) {
+      console.log(d["data"]["data"]);
+    });
+}
 
 /**
  * Updates the highlighting in the tree based on the selected team.
@@ -451,8 +457,8 @@ function updateTree(row) {
       if (row["value"]["type"] == "aggregate") {
         classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Wins"] > 0;
       } else {
-        console.log(d["data"]["data"]["Opponent"] + " | " + row["value"]["Opponent"]);
-        classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Opponent"] == row["value"]["Opponent"];
+        classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Opponent"] == row["value"]["Opponent"]
+          || (d["data"]["data"]["id"].includes(row["value"]["Opponent"]) && d["data"]["data"]["id"].includes(row["key"]));
       }
       return classed;
     });
@@ -464,8 +470,11 @@ function updateTree(row) {
         if (row["value"]["type"] == "aggregate") {
           classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"];
         } else {
-          classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Opponent"] == row["value"]["Opponent"];
+          classed = d["data"]["data"]["Team"] == row["key"] && d["data"]["data"]["Opponent"] == row["value"]["Opponent"]
+            || (d["data"]["data"]["id"].includes(row["value"]["Opponent"]) &&  + d["data"]["data"]["id"].includes(row["key"]));
         }
+        console.log(d["data"]["data"])
+        console.log(row);
         return classed;
       });
 }
