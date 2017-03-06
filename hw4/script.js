@@ -129,8 +129,8 @@ function createAndUpdateColumns(tableRows) {
     columnData.push({"type":d["value"]["type"], "vis":"goals", "value": d["value"]});
     columnData.push({"type":d["value"]["type"], "vis":"text", "value":d["value"]["Result"]["label"]});
     columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Wins"]});
-    // columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Losses"]});
-    // columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["TotalGames"]});
+    columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["Losses"]});
+    columnData.push({"type":d["value"]["type"], "vis":"bar", "value":d["value"]["TotalGames"]});
     return columnData;
   });
   tableColumns.exit().remove();
