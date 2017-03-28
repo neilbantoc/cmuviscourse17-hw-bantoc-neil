@@ -8,7 +8,7 @@ var prediction2 = [0.95, 0.96, 0.98, 1.1, 1.22, 1.24, 1.26, 1.28, 1.32, 1.33, 1.
 
 
 var tempHeight = 600;
-var tempWidth = 600;
+var tempWidth = 530;
 var baselineRadius = 60;
 
 var levelOneRadius = baselineRadius + baselineRadius;
@@ -182,7 +182,7 @@ temp.append('g')
     .attr('transform', 'translate(0, ' + graphSize + ') scale (1 -1)')
   .append('rect')
     .attr('id', 'temperature-bar')
-    .attr('x', tempWidth/2 + levelTwoRadius)
+    .attr('x', graphSize)
     .attr('width', tempBarWidth)
     .attr('y', 0)
     .attr('fill', blue5)
@@ -190,7 +190,7 @@ temp.append('g')
 
 temp.append('text')
   .attr('id', 'temp-reading')
-  .attr('x', tempWidth/2 + levelTwoRadius + tempBarWidth/2)
+  .attr('x', graphSize + tempBarWidth/2)
   .attr('text-anchor', 'middle')
   .attr('y', graphSize - 8);
 
@@ -212,30 +212,29 @@ function increment(){
     .attr('height', tempLengthScale(newTemp));
 
   d3.select('#prediction')
-    .datum(generateRandomPrediction())
+    .datum(function() {
+      var newPrediction = [];
+
+      for (x = 0; x < prediction.length; x++) {
+        newPrediction[x] = prediction[x] + (x > 4 ? (Math.random() * 0.15) : 0);
+      }
+      return newPrediction;
+    })
     .transition()
     .attr('d', radialLineGenerator);
-}
-
-function generateRandomPrediction() {
-  var newPrediction = [];
-
-  for (x = 0; x < prediction.length; x++) {
-    newPrediction[x] = prediction[x] + (x > 4 ? (Math.random() * 0.2) : 0);
-  }
-  return newPrediction;
 }
 
 var labelMargin = 20;
 var labelHeight = tempHeight - (levelTwoRadius * 2) - baselineRadius - (labelMargin * 2);
 
 // create labels for radial graph
-temp.append('g')
+labelGroup = temp.append('g')
   .attr('id', 'pie-legends')
   .attr('width', graphSize)
   .attr('height', 50)
-  .attr('transform', 'translate(' + 0 + ', ' + (tempHeight - labelHeight) + ')')
-  .append('image')
+  .attr('transform', 'translate(' + 0 + ', ' + (tempHeight - labelHeight) + ')');
+
+labelGroup.append('image')
   .attr('height', labelHeight)
   .attr('width', graphSize)
   .attr('xlink:href', 'pie-legends.png');
