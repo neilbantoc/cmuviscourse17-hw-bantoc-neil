@@ -19,6 +19,7 @@ temp = svg.append('g')
   .attr('id', 'temperature')
   .attr('height', tempHeight)
   .attr('width', tempWidth)
+  .attr('transform', 'translate(' + (svgWidth/2 - tempWidth/2) + ',' + (svgHeight/2 - tempHeight/2 ) + ')')
   .attr('background-color', '#ff0000');
 
 temp.append('rect')

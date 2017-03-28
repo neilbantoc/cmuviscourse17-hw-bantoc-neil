@@ -35,15 +35,17 @@
 </head>
 <body bgcolor="#fafafa">
   <script>
+    svgHeight = 1080;
+    svgWidth = 1920;
     svg = d3.select('body')
       .append('svg')
-      .attr('height', 1080)
-      .attr('width', 1920)
+      .attr('height', svgHeight)
+      .attr('width', svgWidth)
       .attr('id', 'svg');
 
     svg.append('rect')
-      .attr('height',  1080)
-      .attr('width',  1920)
+      .attr('height',  svgHeight)
+      .attr('width',  svgWidth)
       .attr('fill', '#BBD8E2');
   </script>
 
