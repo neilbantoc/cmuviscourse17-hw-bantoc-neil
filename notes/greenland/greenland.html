@@ -7,10 +7,10 @@
       * {
         margin: 0;
         padding: 0;
+        font-family: Helvetica, Arial;
       }
 
       .pie-label {
-        font-family: Helvetica, Arial;
         font-size: 1em;
         text-anchor: middle;
       }
@@ -24,6 +24,11 @@
         fill: none;
         stroke-width: 3;
       }
+
+      .bounding-box {
+        fill: #ffffff;
+        fill-opacity: 0.4;
+      }
     </style>
     <script src="https://d3js.org/d3.v4.js"></script>
 </head>
@@ -34,6 +39,11 @@
       .attr('height', 1080)
       .attr('width', 1920)
       .attr('id', 'svg');
+
+    svg.append('rect')
+      .attr('height',  1080)
+      .attr('width',  1920)
+      .attr('fill', '#BBD8E2');
   </script>
 
   <script src="temperature.js"></script>
