@@ -12,7 +12,7 @@
       }
 
       body {
-        background-color: #BBD8E2;
+        background-color: #88BBD7;
       }
 
       .pie-label {
@@ -38,6 +38,27 @@
       .header1 {
         font-size: 52px;
         alignment-baseline: hanging;
+      }
+
+      #ice-sheet {
+        position: absolute;
+        top: 0;
+        z-index: -5;
+        margin-left: 1200px;
+        width: 1400px;
+        height: 1920px;
+        overflow: hidden;;
+      }
+
+      #ice-sheet > img {
+        position: absolute;
+        right: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+
+      #svg {
+        z-index: 5;
       }
 
     </style>
@@ -73,5 +94,6 @@
   </script>
 
   <script src="temperature.js"></script>
+  <script src="ice-sheet.js"></script>
 </body>
 </html>
