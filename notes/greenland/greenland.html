@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      .pie-label {
+        font-family: Helvetica, Arial;
+        font-size: 1em;
+        text-anchor: middle;
+      }
+
+      .pie-divider {
+        fill: none;
+        stroke: #fafafa;
+      }
+
+      .pie-line {
+        fill: none;
+        stroke-width: 3;
+      }
+    </style>
+    <script src="https://d3js.org/d3.v4.js"></script>
+</head>
+<body bgcolor="#fafafa">
+  <script>
+    svg = d3.select('body')
+      .append('svg')
+      .attr('height', 1080)
+      .attr('width', 1920)
+      .attr('id', 'svg');
+  </script>
+
+  <script src="temperature.js"></script>
+</body>
+</html>
