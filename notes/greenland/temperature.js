@@ -319,7 +319,7 @@ function increment(x){
   //   .attr('height', tempLengthScale(newTemp));
 
   radarPie.transition()
-    .duration(1000)
+    .duration(x == 0 ? 300 : 1000)
     .ease(d3.easeLinear)
     .attr('transform', 'translate(' + (graphSize/2) + ',' + (graphSize/2) +') rotate(' + (5 * x) + ') ');
 

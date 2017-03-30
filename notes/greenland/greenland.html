@@ -40,10 +40,12 @@
         font-size: 52px;
         alignment-baseline: hanging;
         fill: #ffffff;
+        font-family: 'Asul', Helvetica, Arial, sans-serif;
       }
 
       .header2 {
         font-size: 20px;
+        font-weight: 200;
         alignment-baseline: hanging;
         fill: #ffffff;
       }
@@ -52,25 +54,8 @@
         fill: #ffffff;
       }
 
-      #ice-sheet {
-        position: absolute;
-        top: 0;
-        z-index: -5;
-        margin-left: 1200px;
-        width: 1400px;
-        height: 1920px;
-        overflow: hidden;;
-      }
-
-      #ice-sheet > img {
-        position: absolute;
-        right: 0;
-        width: 1920px;
-        height: 1080px;
-      }
-
-      #svg {
-        z-index: 5;
+      #temperature {
+        font-size: 18px;
       }
 
       .alerting {
@@ -93,7 +78,7 @@
       }
 
     </style>
-    <link href="https://fonts.googleapis.com/css?family=Pavanam" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pavanam|Asul" rel="stylesheet">
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.22.0/d3-legend.min.js"></script>
 </head>
@@ -317,7 +302,7 @@
       .attr('class', 'header2')
       .attr('x', 20)
       .attr('y', 80)
-      .text('The positive and negative effects of rising global temperature on Greenland');
+      .text('The positive and negative effects of rising global temperature and rapid ice melting on Greenland\'s economy and biodiversity');
 
     animationFunctions.push(function(x) {
       bear1 = d3.select('#polar-bear');
