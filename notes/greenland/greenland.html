@@ -12,7 +12,7 @@
       }
 
       body {
-        background: #88BBD7;
+        background: #181d27;
         /*background: linear-gradient(40deg, #88BBD7, #63899D);*/
       }
 
@@ -32,12 +32,24 @@
 
       .bounding-box {
         fill: #ffffff;
-        fill-opacity: 0.4;
+        fill-opacity: 0.9;
+        transition-duration: 0.5s;
       }
 
       .header1 {
         font-size: 52px;
         alignment-baseline: hanging;
+        fill: #ffffff;
+      }
+
+      .header2 {
+        font-size: 20px;
+        alignment-baseline: hanging;
+        fill: #ffffff;
+      }
+
+      .map-labels {
+        fill: #ffffff;
       }
 
       #ice-sheet {
@@ -61,9 +73,29 @@
         z-index: 5;
       }
 
+      .alerting {
+        animation-duration: 0.5s;
+        animation-name: alertToRed;
+        animation-direction: alternate;
+        animation-iteration-count: infinite;
+        fill-opacity: 0.9;
+        fill: #F9928F;
+      }
+
+      @keyframes alertToRed{
+        from {
+          fill: #ffffff;
+        }
+
+        to {
+          fill: #F9928F;
+        }
+      }
+
     </style>
     <link href="https://fonts.googleapis.com/css?family=Pavanam" rel="stylesheet">
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.22.0/d3-legend.min.js"></script>
 </head>
 <body>
   <svg id="svg">
@@ -71,22 +103,140 @@
     </g>
 
     <g id="Group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(1506.000000, 591.000000)">
-        <text id="Ilulissat" font-family="Helvetica" font-size="24" font-weight="normal" fill="#000000">
-            <tspan x="0" y="23">Ilulissat</tspan>
+        <text id="Ilulissat" class = "map-labels" font-family="Helvetica" font-size="24" font-weight="normal" fill="#000000">
+            <tspan x="18" y="28">Ilulissat</tspan>
         </text>
-        <circle id="Oval-2" stroke="#000000" fill="#000000" cx="97.5" cy="28.5" r="3.5"></circle>
+        <circle id="Oval-2" stroke="none" fill="#ffffff" cx="100" cy="35" r="6"></circle>
     </g>
     <g id="Group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(1299.000000, 523.000000)">
-        <text id="Qeqertarsuaq" font-family="Helvetica" font-size="24" font-weight="normal" fill="#000000">
-            <tspan x="19" y="23">Qeqertarsuaq</tspan>
+        <text id="Qeqertarsuaq" class = "map-labels" font-family="Helvetica" font-size="24" font-weight="normal" fill="#000000">
+            <tspan x="19" y="23">Berntsensville</tspan>
         </text>
-        <circle id="Oval-2" stroke="#000000" fill="#000000" cx="3.5" cy="32.5" r="3.5"></circle>
+        <circle id="Oval-2" stroke="none" fill="#ffffff" cx="3.5" cy="32.5" r="6"></circle>
     </g>
 
     <g id="temperature">
     </g>
+
+    <g id="left-charts" transform="translate(-20, 0)">
+      <g id="Arable-Land" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(65.000000, 220.000000)">
+          <rect id="Rectangle-3-Copy" class="bounding-box" x="0" y="0" width="635" height="378"></rect>
+          <g id="GDP-vs-Arable" transform="translate(22.743553, 17.758389)">
+              <g id="Graph" transform="translate(0.000000, 0.461257)">
+                  <polygon id="Fill-Arable" fill="#69B578" points="0.319675123 89.1451023 133.269895 73.0813123 239.258182 69.3038438 307.396573 73.0813123 420.070783 65.0494174 520.049308 47.8382139 585.114697 44.3959732 585.114697 159.13733 0.319675123 159.13733"></polygon>
+                  <polygon id="Rectangle-9" fill="#D5D3CE" points="0.319675123 157.288591 136.988782 144.14277 242.977069 149.216595 353.613965 144.14277 448.44559 144.14277 585.114697 157.288591 585.114697 303.161074 0.319675123 303.161074"></polygon>
+                  <text id="Other-Contributions" font-family="RobotoCondensed-Light, Roboto Condensed" font-size="20" font-style="condensed" font-weight="300" letter-spacing="-0.408333331" fill="#000000">
+                      <tspan x="220.554021" y="245.248322">Other Contributions</tspan>
+                  </text>
+                  <text id="Contribution-via-Pro" font-family="RobotoCondensed-Light, Roboto Condensed" font-size="20" font-style="condensed" font-weight="300" letter-spacing="-0.408333331" fill="#000000">
+                      <tspan x="202.236327" y="115.865772">Contribution via Produce</tspan>
+                  </text>
+                  <text id="GDP-&amp;-Arable-Land-Pr" font-family="RobotoCondensed-Light, Roboto Condensed" font-size="24" font-style="condensed" font-weight="300" letter-spacing="-0.49000001" fill="#000000">
+                      <tspan x="0" y="22">GDP &amp; Arable Land Produce</tspan>
+                  </text>
+              </g>
+              <g id="X-Axis" transform="translate(31.930217, 307.837706)" font-size="14" font-family="Roboto-Light, Roboto" letter-spacing="-0.49000001" fill="#000000" font-weight="300">
+                  <text id="2017">
+                      <tspan x="497.515567" y="13">2017</tspan>
+                  </text>
+                  <text id="2015">
+                      <tspan x="303.771524" y="13">2015</tspan>
+                  </text>
+                  <text id="2014">
+                      <tspan x="197.331895" y="13">2014</tspan>
+                  </text>
+                  <text id="2016">
+                      <tspan x="398.251643" y="13">2016</tspan>
+                  </text>
+                  <text id="2013">
+                      <tspan x="94.4801196" y="13">2013</tspan>
+                  </text>
+                  <text id="2012">
+                      <tspan x="0" y="13">2012</tspan>
+                  </text>
+              </g>
+              <g id="Money-Labels" transform="translate(1.249397, 44.469799)" font-size="14" font-family="Roboto-Light, Roboto" letter-spacing="-0.49000001" fill="#000000" font-weight="300">
+                  <text id="$1.98-B">
+                      <tspan x="0" y="56.0536913">$1.98 B</tspan>
+                  </text>
+                  <text id="$1.46-B">
+                      <tspan x="539" y="127">$1.46 B</tspan>
+                  </text>
+                  <text id="$2.17-B">
+                      <tspan x="541" y="13">$2.17 B</tspan>
+                  </text>
+                  <text id="$1.50-B">
+                      <tspan x="0" y="125">$1.50 B</tspan>
+                  </text>
+              </g>
+          </g>
+      </g>
+
+      <g id="Energy-Graphs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(65.000000, 634.000000)">
+          <rect id="Rectangle-3" class="bounding-box" x="0" y="0" width="635" height="378"></rect>
+          <g id="X-Axis" transform="translate(71.869628, 342.000000)" font-size="14" font-family="Roboto-Light, Roboto" letter-spacing="-0.49000001" fill="#000000" font-weight="300">
+              <text id="2008">
+                  <tspan x="381.216747" y="13">2008</tspan>
+              </text>
+              <text id="2010">
+                  <tspan x="433.946991" y="13">2010</tspan>
+              </text>
+              <text id="2013">
+                  <tspan x="497.594141" y="13">2013</tspan>
+              </text>
+              <text id="2004">
+                  <tspan x="299.305158" y="13">2004</tspan>
+              </text>
+              <text id="1993">
+                  <tspan x="0.495706479" y="13">1993</tspan>
+              </text>
+          </g>
+          <text id="Percent-Renewable-En" font-family="RobotoCondensed-Light, Roboto Condensed" font-size="24" font-style="condensed" font-weight="300" letter-spacing="-0.588" fill="#000000">
+              <tspan x="33.6604585" y="47">Percent Renewable Energy used in Greenland</tspan>
+          </text>
+          <text id="World-Average:-13%" font-family="Roboto-Light, Roboto" font-size="14" font-weight="300" letter-spacing="-0.49000001" fill="#000000">
+              <tspan x="503.997135" y="296">World Average: </tspan>
+              <tspan x="503.997135" y="312">13%</tspan>
+          </text>
+          <text id="70%" font-family="Roboto-Light, Roboto" font-size="14" font-weight="300" letter-spacing="-0.49000001" fill="#000000">
+              <tspan x="33.6604585" y="144">70%</tspan>
+          </text>
+          <text id="0%" font-family="Roboto-Light, Roboto" font-size="14" font-weight="300" letter-spacing="-0.49000001" fill="#000000">
+              <tspan x="34.5702006" y="334">0%</tspan>
+          </text>
+          <path d="M65.0465616,300.5 L603.706861,300.5" id="Line" stroke="#3A7D44" stroke-dasharray="5,5,5,5"></path>
+          <path d="M606.343123,335.5 L63.2270774,335.5" id="Line" stroke="#979797" stroke-linecap="square"></path>
+          <path d="M64.1368195,335.5 L64.1368195,72.4923955" id="Line" stroke="#979797" stroke-linecap="square"></path>
+          <polyline id="Line" stroke="#69B578" stroke-width="2" stroke-linecap="square" points="64.5916905 337 90.0644699 337 90.0644699 317.5 382.091691 317.5 382.091691 258.140741 464.878223 258.140741 464.878223 221.093827 518.553009 221.093827 518.553009 172.680247 591.332378 172.680247 591.332378 148 608.617479 148"></polyline>
+      </g>
+    </g>
+
+    <g id="Ice-Sheet-Info" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(1313.000000, 727.000000)">
+        <rect id="Rectangle-3" class="bounding-box" x="0" y="0" width="466" height="284.587265"></rect>
+        <text id="The-town-of-Ilulissa" font-family="RobotoCondensed-Regular, Roboto Condensed" font-size="18" font-style="condensed" font-weight="normal" fill="#000000">
+            <tspan x="60.6946454" y="123.245912">The town of Ilulissat is known for its scenic view </tspan>
+            <tspan x="60.6946454" y="144.245912">of the ice sheets. It was selected to be a </tspan>
+            <tspan x="60.6946454" y="165.245912">UNESCO World Heritage site in 2001. However in </tspan>
+            <tspan x="60.6946454" y="186.245912">the short span of 2008 - 2011, the ice sheet has </tspan>
+            <tspan x="60.6946454" y="207.245912">retracted more than 10 meters. This animation </tspan>
+            <tspan x="60.6946454" y="228.245912">displays how the current trend will further retract </tspan>
+            <tspan x="60.6946454" y="249.245912">the ice sheets, destroying a World Heritage site.</tspan>
+        </text>
+        <text id="ILLULISSAT-ICE-SHEET" font-family="RobotoCondensed-Regular, Roboto Condensed" font-size="24" font-style="condensed" font-weight="normal" fill="#000000">
+            <tspan x="36.4167873" y="52.355975">Illulissat Ice Sheet</tspan>
+        </text>
+    </g>
   </svg>
   <script>
+    var animationFunctions = [];
+    var animationCounter = 0;
+
+    function runAnimations() {
+      for (var x = 0; x < animationFunctions.length; x++) {
+        animationFunctions[x](animationCounter);
+      }
+      animationCounter = (animationCounter + 1) % 30;
+    }
 
     svgHeight = 1080;
     svgWidth = 1920;
@@ -109,9 +259,18 @@
       .attr('x', 20)
       .attr('y', 20)
       .text('A Tale of Two Greenlands');
+
+    svg.append('text')
+      .attr('class', 'header2')
+      .attr('x', 20)
+      .attr('y', 80)
+      .text('The positive and negative effects of rising global temperature on Greenland');
+
+      setInterval(runAnimations, 1000);
   </script>
 
   <script src="ice-sheet.js"></script>
   <script src="temperature.js"></script>
+
 </body>
 </html>

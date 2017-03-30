@@ -25,10 +25,11 @@ var dataYear1 = [];
 var dataYear2 = [];
 var dataYear3 = [];
 var dataYear4 = [];
+var currentYear = [];
 
-dataYear1[0] = -0.08;
+dataYear1[0] = -0.01;
 
-var maxVariance = 0.05;
+var maxVariance = 0.03;
 
 for (x = 1; x < 13; x++) {
   dataYear1[x] = dataYear1[x - 1] + (Math.random() * maxVariance);
@@ -48,16 +49,18 @@ for (x = 1; x < 13; x++) {
 
 dataYear4[0] = dataYear3[12];
 
-for (x = 1; x < 16; x++) {
+for (x = 1; x < 13; x++) {
   dataYear4[x] = dataYear4[x - 1] + (Math.random() * maxVariance);
 }
+
+currentYear[0] = dataYear4[12];
 
 // var prediction = [0.95, 0.96, 0.98, 1.1, 1.2, 1.22, 1.24, 1.26, 1.3, 1.31, 1.3, 1.28, 1.27];
 
 
 // Height and Width of the whole temperature section
 var tempHeight = 530;
-var tempWidth = 530;
+var tempWidth = 460;
 
 // Radii of graph's circles
 var baselineRadius = 60;
@@ -74,7 +77,7 @@ temp = svg.select('#temperature')
   .attr('transform', 'translate(' + (svgWidth/2 - tempWidth/2) + ',' + (svgHeight/2 - tempHeight/2 ) + ')');
 
 // Background color
-temp.append('rect')
+tempBackground = temp.append('rect')
   .attr('height',  tempHeight)
   .attr('width',  tempWidth)
   .attr('class', 'bounding-box')
@@ -125,7 +128,7 @@ radialScale = d3.scaleLinear()
 // scale for the radial chart line color
 colorScale = d3.scaleLinear()
   .interpolate(d3.interpolateCubehelix)
-  .domain([0, 3])
+  .domain([0, 4])
   .range(['#E24F59', '#F5E074']);
 
 // create pie chart for month boudaries to divide the circles
@@ -137,7 +140,7 @@ pieGenerator = d3.pie()
 
 // create an arc generator for text labels
 labelArc = d3.arc()
-  .outerRadius(levelTwoRadius + 50)
+  .outerRadius(levelTwoRadius + 60)
   .startAngle(function(d) {
     return d.startAngle - (15 * (Math.PI/180));
   })
@@ -152,6 +155,11 @@ radialLineGenerator = d3.radialLine()
   .curve(d3.curveNatural)
   .radius(function(d, i){ return radialScale(d); })
   .angle(function(d, i){ return (i * 30 % 360) * (Math.PI/180) ; });
+
+currentYearLineGenerator = d3.radialLine()
+  .curve(d3.curveNatural)
+  .radius(function(d, i){ return radialScale(d); })
+  .angle(function(d, i){ return (i * 5 % 360) * (Math.PI/180) ; });
 
 // draw paths for each year
 year1Path = temp.append('path')
@@ -186,14 +194,13 @@ year4Path = temp.append('path')
     .attr('stroke', colorScale(3))
     .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
 
-// predictionPath = temp.append('path')
-//     .datum(prediction)
-//     .attr('id', 'prediction')
-//     .attr('d', radialLineGenerator)
-//     .attr('class', 'pie-line')
-//     .attr('stroke', '#fc9272')
-//     .attr('stroke-dasharray', '20, 5')
-//     .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
+currentYearPath = temp.append('path')
+    .datum(currentYear)
+    .attr('d', currentYearLineGenerator)
+    .attr('id', 'prediction')
+    .attr('class', 'pie-line')
+    .attr('stroke', colorScale(4))
+    .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
 
 
 // create an arc generator for pie chart (spits out the path d commands)
@@ -207,15 +214,15 @@ pie = temp.selectAll('.arc')
   .enter().append('g')
   .attr('class', 'arc');
 
-var offset = 2; //we're on Apr
+var offset = 11; //we're on Apr
 
 var radarColorScale = d3.scalePow()
   .exponent(2.25)
   .domain([0 , 12])
-  .range([0.05, 0.7 ]);
+  .range([0.05, 0.9 ]);
 
 // draw the boundaries
-pie.append('path')
+radarPie = pie.append('path')
   .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')')
   .attr('d', arcGenerator)
   .attr('fill', '#000000')
@@ -240,38 +247,95 @@ tempLengthScale = d3.scaleLinear()
   .domain([0, 2])
   .range([0, tempBarHeight]);
 
-temp.append('g')
-    .attr('transform', 'translate(0, ' + graphSize + ') scale (1 -1)')
-  .append('rect')
-    .attr('id', 'temperature-bar')
-    .attr('x', graphSize)
-    .attr('width', tempBarWidth)
-    .attr('y', 0)
-    .attr('fill', tempBarColor)
-    .attr('height', tempLengthScale(1));
+// temp.append('g')
+//     .attr('transform', 'translate(0, ' + graphSize + ') scale (1 -1)')
+//   .append('rect')
+//     .attr('id', 'temperature-bar')
+//     .attr('x', graphSize)
+//     .attr('width', tempBarWidth)
+//     .attr('y', 0)
+//     .attr('fill', tempBarColor)
+//     .attr('height', tempLengthScale(1));
 
-temp.append('text')
-  .attr('id', 'temp-reading')
-  .attr('x', graphSize + tempBarWidth/2)
-  .attr('text-anchor', 'middle')
-  .attr('y', graphSize - 8);
+var degrees = ['-1°', '0°', '+1°', '+2°']
 
-var counter = 0;
+degreesAxis = temp.selectAll('.circle-graph-labels')
+  .data(degrees)
+  .enter()
+  .append('g');
 
-setInterval(increment, 1000);
+degreesAxis.append('text')
+  .attr('id', '')
+  .attr('class', 'circle-graph-labels')
+  .attr('x', graphSize/2 - 10)
+  .attr('text-anchor', 'end')
+  .attr('alignment-baseline', 'central')
+  .attr('y', function (d, i) {
+    return graphSize/2 - (baselineRadius * i);
+  })
+  .text(function(d, i) {
+    return d;
+  });
 
-function increment(){
-  counter = (counter + 1) % 10;
+degreesAxis.append('line')
+  .attr('x1', function (d, i) {
+    return graphSize/2 - 6;
+  })
+  .attr('x2', function (d, i) {
+    return graphSize/2;
+  })
+  .attr('y1', function (d, i) {
+    return graphSize/2 - (baselineRadius * i);
+  })
+  .attr('y2', function (d, i) {
+    return graphSize/2 - (baselineRadius * i);
+  })
+  .attr('stroke', '#000000');
 
-  newTemp = 1 + Math.random() * 0.5;
+temp.append('line')
+  .attr('x1', graphSize/2)
+  .attr('x2', graphSize/2)
+  .attr('y1', graphSize/2)
+  .attr('y2', graphSize/2 - levelTwoRadius)
+  .attr('stroke', '#000000');
 
-  d3.select('#temp-reading')
-    .text(parseFloat(Math.round((10 + newTemp) * 100) / 100).toFixed(2) + "°C")
+// var counter = 0;
 
-  // update temperature
-  d3.select('#temperature-bar')
-    .transition()
-    .attr('height', tempLengthScale(newTemp));
+// setInterval(increment, 1000);
+
+animationFunctions.push(increment);
+
+function increment(x){
+  // counter = (counter + 1) % 29;
+
+  // newTemp = 1 + Math.random() * 0.5;
+
+  // d3.select('#temp-reading')
+  //   .text(parseFloat(Math.round((10 + newTemp) * 100) / 100).toFixed(2) + "°C")
+  //
+  // // update temperature
+  // d3.select('#temperature-bar')
+  //   .transition()
+  //   .attr('height', tempLengthScale(newTemp));
+
+  radarPie.transition()
+    // .duration(1000)
+    .attr('transform', 'translate(' + (graphSize/2) + ',' + (graphSize/2) +') rotate(' + (5 * x) + ') ');
+
+  newReading = currentYear[currentYear.length - 1] + (Math.random() * maxVariance);
+
+  if (x == 0) {
+    currentYear = [];
+    currentYear[0] = dataYear4[12];
+  } else {
+    currentYear[x] = newReading;
+  }
+
+  tempBackground.classed('alerting', newReading >= 1.0);
+
+  currentYearPath
+    .datum(currentYear)
+    .attr('d', currentYearLineGenerator);
 
   // d3.select('#prediction')
   //   .datum(function() {
@@ -289,6 +353,36 @@ function increment(){
     // animateLines();
   // }
 }
+
+yearsAgo = [20, 0];
+var scale = d3.scaleLinear()
+  .domain(yearsAgo)
+  .range(['#E24F59', '#F5E074']);
+
+temp.append("g")
+  .attr("class", "legendLinear")
+  .attr("transform", function () {
+    return "translate(" + 10 + "," + (graphSize + 20) + ")";
+  });
+
+var legendLinear = d3.legendColor()
+  .shapeWidth(30)
+  .orient('horizontal')
+  .shapeWidth((graphSize - 20)/5)
+  .shapePadding(0)
+  .scale(scale);
+
+temp.select(".legendLinear")
+  .call(legendLinear);
+
+
+temp.append('text')
+  .attr('x', 10)
+  .attr('text-anchor', 'start')
+  .attr('alignment-baseline', 'hanging')
+  .attr('y', graphSize)
+  .text('Years In The Past');
+
 
 // function animateLines() {
 //   for (var x = 1; x < 5; x++) {

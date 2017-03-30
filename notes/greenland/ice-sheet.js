@@ -16,7 +16,7 @@ var tenYearsFill = '#ffffff';
 var yearsStrokeWidth = '2';
 var yearsAlpha = 0.4;
 
-var greenlandFill = '#ACD0A5';
+var greenlandFill = '#69b578';
 var iceSheetFill = '#F3F6FB';
 
 var mapStrokeColor = '#000000';
@@ -82,30 +82,34 @@ group.append('circle')
 
 
 // animations
-var transitionTime = 10000;
-var staggerDelay = 500;
+var transitionTime = 14500;
+var staggerTime = 500;
 
-iceSheetAnimation();
-setInterval(iceSheetAnimation, transitionTime * 2);
+// iceSheetAnimation();
+// setInterval(iceSheetAnimation, transitionTime * 2);
 
-function iceSheetAnimation() {
-  iceSheetPath
-      .attr('d', pathData1)
-    .transition()
-      .ease(d3.easeLinear)
-      .duration(transitionTime - staggerDelay * 2)
-      .attr('d', transformPath1);
+animationFunctions.push(iceSheetAnimation);
 
-  iceSheetPath
-    .transition()
-      .ease(d3.easeLinear)
-      .delay(transitionTime - staggerDelay)
-      .duration(transitionTime - staggerDelay * 2)
-      .attr('d',  transformPath2);
+function iceSheetAnimation(x) {
 
-  iceSheetPath
-    .transition()
-      .delay(transitionTime * 2 - staggerDelay * 2)
-      .duration(staggerDelay * 2 - 100)
-      .attr('d',  pathData1);
+  if (x == 0) {
+    iceSheetPath
+      .transition()
+        .duration(staggerTime)
+        .attr('d', pathData1)
+      .transition()
+        .ease(d3.easeLinear)
+        .delay(staggerTime)
+        .duration(transitionTime)
+        .attr('d', transformPath1);
+  }
+
+  if (x == 15) {
+    iceSheetPath
+      .transition()
+        .ease(d3.easeLinear)
+        .delay(staggerTime)
+        .duration(transitionTime)
+        .attr('d',  transformPath2);
+  }
 };
