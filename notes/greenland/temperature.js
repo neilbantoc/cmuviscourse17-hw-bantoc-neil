@@ -68,8 +68,7 @@ var levelTwoRadius = levelOneRadius + baselineRadius;
 var graphSize = (levelTwoRadius * 2) + 100;
 
 // A group for the radial temperature graph
-temp = svg.append('g')
-  .attr('id', 'temperature')
+temp = svg.select('#temperature')
   .attr('height', tempHeight)
   .attr('width', tempWidth)
   .attr('transform', 'translate(' + (svgWidth/2 - tempWidth/2) + ',' + (svgHeight/2 - tempHeight/2 ) + ')');

@@ -11,22 +11,55 @@ var transformPath2 = 'M609.700718,1078.89918 L611.698582,1070.53539 L609.700718,
 //     .attr('src', 'ice-melt.gif')
 //     .attr('loop', 'infinite');
 
-var iceSheetFill = '#FCFAFA';
+var fiveYearsFill = '#ffffff';
+var tenYearsFill = '#ffffff';
+var yearsStrokeWidth = '2';
+var yearsAlpha = 0.4;
+
 var greenlandFill = '#ACD0A5';
+var iceSheetFill = '#F3F6FB';
 
 var mapStrokeColor = '#000000';
 var mapStrokeWidth = '1';
+var mapStrokeDash = '5, 5';
 
-iceSheet = svg.append('g')
-  .attr('id', 'ice-sheet-path')
+
+
+iceSheet = svg.select('#ice-sheet')
   .attr('transform', 'translate(1158.000000, 2)');
 
+iceSheet.append('g')
+    .attr('transform', 'translate(1511.000000, 584.000000)')
+  .append('text')
+    .attr('font-size', '24')
+    .text('Ilulissat');
+
+// greenland
 iceSheet.append('path')
   .attr('id', 'greenland-path')
   .attr('d', pathData2)
   .attr('fill', greenlandFill)
   .attr('stroke', mapStrokeColor)
   .attr('stroke-width', mapStrokeWidth);
+
+// ice sheets
+iceSheet.append('path')
+  .attr('id', 'five-years-path')
+  .attr('d', pathData1)
+  .attr('fill', fiveYearsFill)
+  .attr('stroke', fiveYearsFill)
+  .attr('stroke-width', yearsStrokeWidth)
+  .attr('stroke-dasharray', mapStrokeDash)
+  .attr('fill-opacity', yearsAlpha);
+
+iceSheet.append('path')
+  .attr('id', 'ten-years-path')
+  .attr('d', transformPath1)
+  .attr('fill', tenYearsFill)
+  .attr('stroke', tenYearsFill)
+  .attr('stroke-width', yearsStrokeWidth)
+  .attr('stroke-dasharray', mapStrokeDash)
+  .attr('fill-opacity', yearsAlpha);
 
 var iceSheetPath = iceSheet.append('path')
   .attr('id', 'ice-sheet-path')
@@ -35,8 +68,22 @@ var iceSheetPath = iceSheet.append('path')
   .attr('stroke', mapStrokeColor)
   .attr('stroke-width', mapStrokeWidth);
 
+group = iceSheet.append('g')
+    .attr('transform', 'translate(1511.000000, 584.000000)');
+
+group.append('text')
+    .attr('font-size', '24')
+    .text('Ilulissat');
+
+group.append('circle')
+  .attr('cx', 92.5)
+  .attr('cy', 28.5)
+  .attr('r', 3.5);
+
+
+// animations
 var transitionTime = 10000;
-var staggerDelay = 300;
+var staggerDelay = 500;
 
 iceSheetAnimation();
 setInterval(iceSheetAnimation, transitionTime * 2);
@@ -59,6 +106,6 @@ function iceSheetAnimation() {
   iceSheetPath
     .transition()
       .delay(transitionTime * 2 - staggerDelay * 2)
-      .duration(staggerDelay  * 2 - 100)
+      .duration(staggerDelay * 2 - 100)
       .attr('d',  pathData1);
 };

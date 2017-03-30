@@ -66,13 +66,31 @@
     <script src="https://d3js.org/d3.v4.js"></script>
 </head>
 <body>
+  <svg id="svg">
+    <g id="ice-sheet">
+    </g>
+
+    <g id="Group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(1506.000000, 591.000000)">
+        <text id="Ilulissat" font-family="Helvetica" font-size="24" font-weight="normal" fill="#000000">
+            <tspan x="0" y="23">Ilulissat</tspan>
+        </text>
+        <circle id="Oval-2" stroke="#000000" fill="#000000" cx="97.5" cy="28.5" r="3.5"></circle>
+    </g>
+    <g id="Group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(1299.000000, 523.000000)">
+        <text id="Qeqertarsuaq" font-family="Helvetica" font-size="24" font-weight="normal" fill="#000000">
+            <tspan x="19" y="23">Qeqertarsuaq</tspan>
+        </text>
+        <circle id="Oval-2" stroke="#000000" fill="#000000" cx="3.5" cy="32.5" r="3.5"></circle>
+    </g>
+
+    <g id="temperature">
+    </g>
+  </svg>
   <script>
 
     svgHeight = 1080;
     svgWidth = 1920;
-    svg = d3.select('body')
-      .append('svg')
-      .attr('id', 'svg')
+    svg = d3.select('#svg')
       // .attr('viewBox', '0 0 ' + svgWidth + ' ' + svgHeight)
       // .attr('preserveAspectRatio', 'xMidYMin')
       .attr('height', svgHeight)
