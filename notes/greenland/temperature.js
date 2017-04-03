@@ -20,43 +20,6 @@ var graphCircleOuter = '#D5D3CE';
 
 var tempBarColor = '#F5E074';
 
-// angles
-var dataYear1 = [];
-var dataYear2 = [];
-var dataYear3 = [];
-var dataYear4 = [];
-var currentYear = [];
-
-dataYear1[0] = -0.01;
-
-var maxVariance = 0.03;
-
-for (x = 1; x < 13; x++) {
-  dataYear1[x] = dataYear1[x - 1] + (Math.random() * maxVariance);
-}
-
-dataYear2[0] = dataYear1[12];
-
-for (x = 1; x < 13; x++) {
-  dataYear2[x] = dataYear2[x - 1] + (Math.random() * maxVariance);
-}
-
-dataYear3[0] = dataYear2[12];
-
-for (x = 1; x < 13; x++) {
-  dataYear3[x] = dataYear3[x - 1] + (Math.random() * maxVariance);
-}
-
-dataYear4[0] = dataYear3[12];
-
-for (x = 1; x < 13; x++) {
-  dataYear4[x] = dataYear4[x - 1] + (Math.random() * maxVariance);
-}
-
-currentYear[0] = dataYear4[12];
-
-// var prediction = [0.95, 0.96, 0.98, 1.1, 1.2, 1.22, 1.24, 1.26, 1.3, 1.31, 1.3, 1.28, 1.27];
-
 
 // Height and Width of the whole temperature section
 var tempHeight = 530;
@@ -159,7 +122,42 @@ radialLineGenerator = d3.radialLine()
 currentYearLineGenerator = d3.radialLine()
   .curve(d3.curveNatural)
   .radius(function(d, i){ return radialScale(d); })
-  .angle(function(d, i){ return (i * 5 % 360) * (Math.PI/180) ; });
+  .angle(function(d, i){ return (i * 1 % 360) * (Math.PI/180) ; });
+
+// angles
+var dataYear1 = [];
+var dataYear2 = [];
+var dataYear3 = [];
+var dataYear4 = [];
+var currentYear = [];
+
+dataYear1[0] = 0.2;
+
+var maxVariance = 0.02;
+
+for (x = 1; x < 13; x++) {
+  dataYear1[x] = dataYear1[x - 1] + (Math.random() * maxVariance);
+}
+
+dataYear2[0] = dataYear1[12];
+
+for (x = 1; x < 13; x++) {
+  dataYear2[x] = dataYear2[x - 1] + (Math.random() * maxVariance);
+}
+
+dataYear3[0] = dataYear2[12];
+
+for (x = 1; x < 13; x++) {
+  dataYear3[x] = dataYear3[x - 1] + (Math.random() * maxVariance);
+}
+
+dataYear4[0] = dataYear3[12];
+
+for (x = 1; x < 13; x++) {
+  dataYear4[x] = dataYear4[x - 1] + (Math.random() * maxVariance);
+}
+
+currentYear[0] = dataYear4[12];
 
 // draw paths for each year
 year1Path = temp.append('path')
@@ -194,14 +192,6 @@ year4Path = temp.append('path')
     .attr('stroke', colorScale(3))
     .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
 
-currentYearPath = temp.append('path')
-    .datum(currentYear)
-    .attr('d', currentYearLineGenerator)
-    .attr('id', 'prediction')
-    .attr('class', 'pie-line')
-    .attr('stroke', colorScale(4))
-    .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
-
 
 // create an arc generator for pie chart (spits out the path d commands)
 arcGenerator = d3.arc()
@@ -220,6 +210,10 @@ var radarColorScale = d3.scalePow()
   .exponent(2.25)
   .domain([0 , 12])
   .range([0.05, 0.9 ]);
+
+pie.filter(function (d, i) {
+  return 1;
+})
 
 // draw the boundaries
 radarPie = pie.append('path')
@@ -299,6 +293,14 @@ temp.append('line')
   .attr('y2', graphSize/2 - levelTwoRadius)
   .attr('stroke', '#000000');
 
+currentYearPath = temp.append('path')
+    .datum(currentYear)
+    .attr('d', currentYearLineGenerator)
+    .attr('id', 'prediction')
+    .attr('class', 'pie-line')
+    .attr('stroke', colorScale(4))
+    .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
+
 // var counter = 0;
 
 // setInterval(increment, 1000);
@@ -321,9 +323,9 @@ function increment(x){
   radarPie.transition()
     .duration(x == 0 ? 300 : 1000)
     .ease(d3.easeLinear)
-    .attr('transform', 'translate(' + (graphSize/2) + ',' + (graphSize/2) +') rotate(' + (5 * x) + ') ');
+    .attr('transform', 'translate(' + (graphSize/2) + ',' + (graphSize/2) +') rotate(' + (1 * x) + ') ');
 
-  newReading = currentYear[currentYear.length - 1] + (Math.random() * maxVariance);
+  newReading = currentYear[currentYear.length - 1] + (Math.random() * 0.01);
 
   if (x == 0) {
     currentYear = [];
@@ -353,6 +355,8 @@ function increment(x){
   // if (counter == 1) {
     // animateLines();
   // }
+
+  updateTempReading(true, newReading);
 }
 
 yearsAgo = [20, 0];
@@ -369,7 +373,8 @@ temp.append("g")
 var legendLinear = d3.legendColor()
   .shapeWidth(30)
   .orient('horizontal')
-  .shapeWidth((graphSize - 20)/5)
+  .cells(3)
+  .shapeWidth((graphSize - 20)/3)
   .shapePadding(0)
   .scale(scale);
 
@@ -399,3 +404,35 @@ temp.append('text')
 //         .attr("stroke-dashoffset", 0);
 //   }
 // }
+
+var readingSize = 36;
+
+tempReading = temp.append('g')
+  .attr('height', readingSize)
+  .attr('width', readingSize);
+
+tempReading.append('circle')
+  .attr('cx', 0)
+  .attr('cy', 0)
+  .attr('r', readingSize/2)
+  .attr('fill', '#ffffff');
+
+tempReadingText = tempReading.append('text')
+  .attr('text-anchor', 'middle')
+  .attr('alignment-baseline', 'central')
+  .attr('font-size', '10')
+  .text('10C');
+
+updateTempReading(false, currentYear[0]);
+
+function updateTempReading(transition, reading) {
+  length = currentYearPath.node().getTotalLength();
+  pos = currentYearPath.node().getPointAtLength(length);
+  x = graphSize/2 + pos.x;
+  y = graphSize/2 + pos.y;
+
+  updateTemp = transition ? tempReading.transition().duration(1000) : tempReading;
+  updateTemp.attr('transform', 'translate(' + x + ', ' + y+')');
+
+  tempReadingText.text(parseFloat(Math.round((10 + reading) * 100) / 100).toFixed(2) + "°C");
+}

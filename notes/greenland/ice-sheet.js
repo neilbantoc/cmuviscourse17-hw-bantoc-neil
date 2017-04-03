@@ -13,7 +13,7 @@ var transformPath2 = 'M609.700718,1078.89918 L611.698582,1070.53539 L609.700718,
 
 var fiveYearsFill = '#ffffff';
 var tenYearsFill = '#ffffff';
-var yearsStrokeWidth = '2';
+var yearsStrokeWidth = '1';
 var yearsAlpha = 0.4;
 
 var greenlandFill = '#69b578';
@@ -47,7 +47,7 @@ iceSheet.append('path')
   .attr('id', 'five-years-path')
   .attr('d', pathData1)
   .attr('fill', fiveYearsFill)
-  .attr('stroke', fiveYearsFill)
+  .attr('stroke', '#ffffff')
   .attr('stroke-width', yearsStrokeWidth)
   .attr('stroke-dasharray', mapStrokeDash)
   .attr('fill-opacity', yearsAlpha);
@@ -56,7 +56,7 @@ iceSheet.append('path')
   .attr('id', 'ten-years-path')
   .attr('d', transformPath1)
   .attr('fill', tenYearsFill)
-  .attr('stroke', tenYearsFill)
+  .attr('stroke', '#ffffff')
   .attr('stroke-width', yearsStrokeWidth)
   .attr('stroke-dasharray', mapStrokeDash)
   .attr('fill-opacity', yearsAlpha);
