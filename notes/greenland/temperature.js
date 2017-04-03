@@ -22,11 +22,13 @@ var tempBarColor = '#F5E074';
 
 
 // Height and Width of the whole temperature section
-var tempHeight = 530;
-var tempWidth = 460;
+var xOffset = 72;
+var yOffset = 36;
+var tempHeight = 854;
+var tempWidth = 460 + xOffset;
 
 // Radii of graph's circles
-var baselineRadius = 60;
+var baselineRadius = 72;
 var levelOneRadius = baselineRadius + baselineRadius;
 var levelTwoRadius = levelOneRadius + baselineRadius;
 
@@ -37,7 +39,7 @@ var graphSize = (levelTwoRadius * 2) + 100;
 temp = svg.select('#temperature')
   .attr('height', tempHeight)
   .attr('width', tempWidth)
-  .attr('transform', 'translate(' + (svgWidth/2 - tempWidth/2) + ',' + (svgHeight/2 - tempHeight/2 ) + ')');
+  .attr('transform', 'translate(' + ((svgWidth/2 - tempWidth/2) + (xOffset/2)) + ',' + ((svgHeight/2 - tempHeight/2) + (yOffset)) + ')');
 
 // Background color
 tempBackground = temp.append('rect')
@@ -45,22 +47,24 @@ tempBackground = temp.append('rect')
   .attr('width',  tempWidth)
   .attr('class', 'bounding-box')
 
+radialGraph = temp.append('g').attr('id', 'radial-graph');
+
 // Graph's circles
-temp.append('circle')
+radialGraph.append('circle')
   .attr('cx', graphSize/2)
   .attr('cy', graphSize/2)
   .attr('r', levelTwoRadius)
   .attr('stroke', 'none')
   .attr('fill', graphCircleOuter);
 
-temp.append('circle')
+radialGraph.append('circle')
   .attr('cx', graphSize/2)
   .attr('cy', graphSize/2)
   .attr('r', levelOneRadius)
   .attr('stroke', 'none')
   .attr('fill', graphCircleMiddle);
 
-temp.append('circle')
+radialGraph.append('circle')
   .attr('cx', graphSize/2)
   .attr('cy', graphSize/2)
   .attr('r', baselineRadius)
@@ -140,7 +144,7 @@ for (x = 0; x < totalYears; x++) {
   for (y = 1; y < 13; y++) {
     dataYears[x][y] = dataYears[x][y - 1] + (Math.random() * maxVariance);
   }
-  temp.append('path')
+  radialGraph.append('path')
     .datum(dataYears[x])
     .attr('d', radialLineGenerator)
     .attr('class', 'pie-line')
@@ -158,7 +162,7 @@ arcGenerator = d3.arc()
   .innerRadius(0);
 
 // append a group for the pie viz
-pie = temp.selectAll('.arc')
+pie = radialGraph.selectAll('.arc')
   .data(pieGenerator(months))
   .enter().append('g')
   .attr('class', 'arc');
@@ -212,7 +216,7 @@ tempLengthScale = d3.scaleLinear()
 
 var degrees = ['-1°', '0°', '+1°', '+2°']
 
-degreesAxis = temp.selectAll('.circle-graph-labels')
+degreesAxis = radialGraph.selectAll('.circle-graph-labels')
   .data(degrees)
   .enter()
   .append('g');
@@ -245,14 +249,14 @@ degreesAxis.append('line')
   })
   .attr('stroke', '#000000');
 
-temp.append('line')
+radialGraph.append('line')
   .attr('x1', graphSize/2)
   .attr('x2', graphSize/2)
   .attr('y1', graphSize/2)
   .attr('y2', graphSize/2 - levelTwoRadius)
   .attr('stroke', '#000000');
 
-currentYearPath = temp.append('path')
+currentYearPath = radialGraph.append('path')
     .datum(currentYear)
     .attr('d', currentYearLineGenerator)
     .attr('id', 'prediction')
@@ -298,7 +302,6 @@ temp.append('text')
 animationFunctions.push(increment);
 
 function increment(x){
-  // counter = (counter + 1) % 29;
 
   // newTemp = 1 + Math.random() * 0.5;
 
@@ -318,7 +321,7 @@ function increment(x){
     .attr('transform', 'translate(' + (graphSize/2) + ',' + (graphSize/2) +') rotate(' + (1 * x) + ') ');
 
   var starting = dataYears[totalYears - 1][12];
-  newReading = starting + ((1 - starting) * (x/24));
+  newReading = starting + ((1 - starting) * (x/(Math.floor(animationDuration * .8))));
 
   if (x == 0) {
     currentYear = [];
@@ -368,7 +371,7 @@ function increment(x){
 //   }
 // }
 
-var readingSize = 36;
+var readingSize = 40;
 
 tempReading = temp.append('g')
   .attr('height', readingSize)
@@ -378,14 +381,14 @@ tempReading.append('circle')
   .attr('cx', 0)
   .attr('cy', 0)
   .attr('r', readingSize/2)
-  .attr('stroke', '#000000')
+  // .attr('stroke', '#000000')
   .attr('fill', colorScale(totalYears));
 
 tempReadingText = tempReading.append('text')
+  .attr('id', 'temperature-reading')
   .attr('text-anchor', 'middle')
   .attr('alignment-baseline', 'central')
-  .attr('font-size', '10')
-  .text('10C');
+  .attr('font-size', '12');
 
 updateTempReading(false, 0, currentYear[0]);
 

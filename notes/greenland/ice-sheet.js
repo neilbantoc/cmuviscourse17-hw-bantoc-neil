@@ -99,6 +99,8 @@ animationFunctions.push(iceSheetAnimation);
 
 function iceSheetAnimation(x) {
 
+  x = x % 30;
+
   if (x == 0) {
     iceSheetPath
       .transition()
