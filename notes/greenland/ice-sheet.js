@@ -80,6 +80,13 @@ group.append('circle')
   .attr('cy', 28.5)
   .attr('r', 3.5);
 
+yearlyPrediction = svg.append('text')
+  .attr('transform', 'rotate(-90) translate( -' + (svgHeight/2) + ', ' + (svgWidth - 20) + ')')
+  .attr('text-anchor', 'middle')
+  .attr('font-size', 30)
+  // .attr('alignment-baseline', 'central')
+  .text('Ice Sheet Now');
+
 
 // animations
 var transitionTime = 14500;
@@ -112,4 +119,8 @@ function iceSheetAnimation(x) {
         .duration(transitionTime)
         .attr('d',  transformPath2);
   }
+
+  timeFrame = Math.floor(x/3);
+
+  yearlyPrediction.text('Ice Sheet' + (timeFrame == 0 ? ' Now' : ' in ' + (timeFrame) + ' Year' + (timeFrame == 1 ? '' : 's')));
 };

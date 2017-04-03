@@ -22,11 +22,11 @@ var tempBarColor = '#F5E074';
 
 
 // Height and Width of the whole temperature section
-var tempHeight = 530;
-var tempWidth = 460;
+var tempHeight = 560;
+var tempWidth = 490;
 
 // Radii of graph's circles
-var baselineRadius = 60;
+var baselineRadius = 65;
 var levelOneRadius = baselineRadius + baselineRadius;
 var levelTwoRadius = levelOneRadius + baselineRadius;
 
@@ -88,12 +88,6 @@ radialScale = d3.scaleLinear()
   .domain([-1, 0, 1, 2])
   .range([0, baselineRadius]);
 
-// scale for the radial chart line color
-colorScale = d3.scaleLinear()
-  .interpolate(d3.interpolateCubehelix)
-  .domain([0, 4])
-  .range(['#E24F59', '#F5E074']);
-
 // create pie chart for month boudaries to divide the circles
 pieGenerator = d3.pie()
   .sort(null)
@@ -103,7 +97,7 @@ pieGenerator = d3.pie()
 
 // create an arc generator for text labels
 labelArc = d3.arc()
-  .outerRadius(levelTwoRadius + 60)
+  .outerRadius(levelTwoRadius + 45)
   .startAngle(function(d) {
     return d.startAngle - (15 * (Math.PI/180));
   })
@@ -125,72 +119,35 @@ currentYearLineGenerator = d3.radialLine()
   .angle(function(d, i){ return (i * 1 % 360) * (Math.PI/180) ; });
 
 // angles
-var dataYear1 = [];
-var dataYear2 = [];
-var dataYear3 = [];
-var dataYear4 = [];
+var dataYears = [];
 var currentYear = [];
 
-dataYear1[0] = 0.2;
+var startingReading = 0;
+var maxVariance = 0.0075;
+var totalYears = 20;
 
-var maxVariance = 0.02;
+// scale for the radial chart line color
+colorScale = d3.scaleLinear()
+  .interpolate(d3.interpolateCubehelix)
+  .domain([0, totalYears])
+  .range(['#E24F59', '#F5E074']);
 
-for (x = 1; x < 13; x++) {
-  dataYear1[x] = dataYear1[x - 1] + (Math.random() * maxVariance);
-}
-
-dataYear2[0] = dataYear1[12];
-
-for (x = 1; x < 13; x++) {
-  dataYear2[x] = dataYear2[x - 1] + (Math.random() * maxVariance);
-}
-
-dataYear3[0] = dataYear2[12];
-
-for (x = 1; x < 13; x++) {
-  dataYear3[x] = dataYear3[x - 1] + (Math.random() * maxVariance);
-}
-
-dataYear4[0] = dataYear3[12];
-
-for (x = 1; x < 13; x++) {
-  dataYear4[x] = dataYear4[x - 1] + (Math.random() * maxVariance);
-}
-
-currentYear[0] = dataYear4[12];
-
-// draw paths for each year
-year1Path = temp.append('path')
-  .attr('id', 'year-1')
-  .datum(dataYear1)
-  .attr('d', radialLineGenerator)
-  .attr('class', 'pie-line')
-  .attr('stroke', colorScale(0))
-  .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
-
-year2Path = temp.append('path')
-  .attr('id', 'year-2')
-  .datum(dataYear2)
-  .attr('d', radialLineGenerator)
-  .attr('class', 'pie-line')
-  .attr('stroke', colorScale(1))
-  .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
-
-year3Path = temp.append('path')
-  .attr('id', 'year-3')
-  .datum(dataYear3)
-  .attr('d', radialLineGenerator)
-  .attr('class', 'pie-line')
-  .attr('stroke', colorScale(2))
-  .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
-
-year4Path = temp.append('path')
-    .attr('id', 'year-4')
-    .datum(dataYear4)
+for (x = 0; x < totalYears; x++) {
+  dataYears[x] = [];
+  dataYears[x][0] = startingReading;
+  for (y = 1; y < 13; y++) {
+    dataYears[x][y] = dataYears[x][y - 1] + (Math.random() * maxVariance);
+  }
+  temp.append('path')
+    .datum(dataYears[x])
     .attr('d', radialLineGenerator)
     .attr('class', 'pie-line')
-    .attr('stroke', colorScale(3))
+    .attr('stroke', colorScale(x))
     .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
+  startingReading = dataYears[x][12];
+}
+
+currentYear[0] = dataYears[totalYears-1][12];
 
 
 // create an arc generator for pie chart (spits out the path d commands)
@@ -298,66 +255,8 @@ currentYearPath = temp.append('path')
     .attr('d', currentYearLineGenerator)
     .attr('id', 'prediction')
     .attr('class', 'pie-line')
-    .attr('stroke', colorScale(4))
+    .attr('stroke', colorScale(totalYears))
     .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
-
-// var counter = 0;
-
-// setInterval(increment, 1000);
-
-animationFunctions.push(increment);
-
-function increment(x){
-  // counter = (counter + 1) % 29;
-
-  // newTemp = 1 + Math.random() * 0.5;
-
-  // d3.select('#temp-reading')
-  //   .text(parseFloat(Math.round((10 + newTemp) * 100) / 100).toFixed(2) + "°C")
-  //
-  // // update temperature
-  // d3.select('#temperature-bar')
-  //   .transition()
-  //   .attr('height', tempLengthScale(newTemp));
-
-  radarPie.transition()
-    .duration(x == 0 ? 300 : 1000)
-    .ease(d3.easeLinear)
-    .attr('transform', 'translate(' + (graphSize/2) + ',' + (graphSize/2) +') rotate(' + (1 * x) + ') ');
-
-  newReading = currentYear[currentYear.length - 1] + (Math.random() * 0.01);
-
-  if (x == 0) {
-    currentYear = [];
-    currentYear[0] = dataYear4[12];
-  } else {
-    currentYear[x] = newReading;
-  }
-
-  tempBackground.classed('alerting', newReading >= 1.0);
-
-  currentYearPath
-    .datum(currentYear)
-    .attr('d', currentYearLineGenerator);
-
-  // d3.select('#prediction')
-  //   .datum(function() {
-  //     var newPrediction = [];
-  //
-  //     for (x = 0; x < prediction.length; x++) {
-  //       newPrediction[x] = prediction[x] + (x > 4 ? (Math.random() * 0.15) : 0);
-  //     }
-  //     return newPrediction;
-  //   })
-  //   .transition()
-  //   .attr('d', radialLineGenerator);
-
-  // if (counter == 1) {
-    // animateLines();
-  // }
-
-  updateTempReading(true, newReading);
-}
 
 yearsAgo = [20, 0];
 var scale = d3.scaleLinear()
@@ -389,6 +288,67 @@ temp.append('text')
   .attr('y', graphSize)
   .text('Years In The Past');
 
+// var counter = 0;
+
+// setInterval(increment, 1000);
+
+animationFunctions.push(increment);
+
+function increment(x){
+  // counter = (counter + 1) % 29;
+
+  // newTemp = 1 + Math.random() * 0.5;
+
+  // d3.select('#temp-reading')
+  //   .text(parseFloat(Math.round((10 + newTemp) * 100) / 100).toFixed(2) + "°C")
+  //
+  // // update temperature
+  // d3.select('#temperature-bar')
+  //   .transition()
+  //   .attr('height', tempLengthScale(newTemp));
+
+  duration = x == 0 ? 300 : 1000
+
+  radarPie.transition()
+    .duration(duration)
+    .ease(d3.easeLinear)
+    .attr('transform', 'translate(' + (graphSize/2) + ',' + (graphSize/2) +') rotate(' + (1 * x) + ') ');
+
+  var starting = dataYears[totalYears - 1][12];
+  newReading = starting + ((1 - starting) * (x/24));
+
+  if (x == 0) {
+    currentYear = [];
+    currentYear[0] = starting;
+  } else {
+    currentYear[x] = newReading;
+  }
+
+  tempBackground.classed('alerting', newReading >= 1.0);
+
+  currentYearPath
+    .datum(currentYear)
+    .attr('d', currentYearLineGenerator);
+
+  // d3.select('#prediction')
+  //   .datum(function() {
+  //     var newPrediction = [];
+  //
+  //     for (x = 0; x < prediction.length; x++) {
+  //       newPrediction[x] = prediction[x] + (x > 4 ? (Math.random() * 0.15) : 0);
+  //     }
+  //     return newPrediction;
+  //   })
+  //   .transition()
+  //   .attr('d', radialLineGenerator);
+
+  // if (counter == 1) {
+    // animateLines();
+  // }
+
+  updateTempReading(true, duration, newReading);
+}
+
 
 // function animateLines() {
 //   for (var x = 1; x < 5; x++) {
@@ -415,7 +375,8 @@ tempReading.append('circle')
   .attr('cx', 0)
   .attr('cy', 0)
   .attr('r', readingSize/2)
-  .attr('fill', '#ffffff');
+  .attr('stroke', '#000000')
+  .attr('fill', colorScale(totalYears));
 
 tempReadingText = tempReading.append('text')
   .attr('text-anchor', 'middle')
@@ -423,16 +384,16 @@ tempReadingText = tempReading.append('text')
   .attr('font-size', '10')
   .text('10C');
 
-updateTempReading(false, currentYear[0]);
+updateTempReading(false, 0, currentYear[0]);
 
-function updateTempReading(transition, reading) {
+function updateTempReading(transition, duration, reading) {
   length = currentYearPath.node().getTotalLength();
   pos = currentYearPath.node().getPointAtLength(length);
   x = graphSize/2 + pos.x;
   y = graphSize/2 + pos.y;
 
-  updateTemp = transition ? tempReading.transition().duration(1000) : tempReading;
+  updateTemp = transition ? tempReading.transition().duration(duration).ease(d3.easeLinear) : tempReading;
   updateTemp.attr('transform', 'translate(' + x + ', ' + y+')');
 
-  tempReadingText.text(parseFloat(Math.round((10 + reading) * 100) / 100).toFixed(2) + "°C");
+  tempReadingText.text(parseFloat(Math.round((10 + reading) * 100) / 100).toFixed(2) + "°");
 }
