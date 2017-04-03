@@ -32,6 +32,8 @@ var baselineRadius = 72;
 var levelOneRadius = baselineRadius + baselineRadius;
 var levelTwoRadius = levelOneRadius + baselineRadius;
 
+var titleHeight = 140;
+
 // Size of graph with padding for text labels
 var graphSize = (levelTwoRadius * 2) + 100;
 
