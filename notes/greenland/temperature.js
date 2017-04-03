@@ -22,11 +22,11 @@ var tempBarColor = '#F5E074';
 
 
 // Height and Width of the whole temperature section
-var tempHeight = 560;
-var tempWidth = 490;
+var tempHeight = 530;
+var tempWidth = 460;
 
 // Radii of graph's circles
-var baselineRadius = 65;
+var baselineRadius = 60;
 var levelOneRadius = baselineRadius + baselineRadius;
 var levelTwoRadius = levelOneRadius + baselineRadius;
 
@@ -126,11 +126,13 @@ var startingReading = 0;
 var maxVariance = 0.0075;
 var totalYears = 20;
 
+temperatureColorRange = ['#4B6374', '#CDE9FF'];
+
 // scale for the radial chart line color
 colorScale = d3.scaleLinear()
   .interpolate(d3.interpolateCubehelix)
   .domain([0, totalYears])
-  .range(['#E24F59', '#F5E074']);
+  .range(temperatureColorRange);
 
 for (x = 0; x < totalYears; x++) {
   dataYears[x] = [];
@@ -259,9 +261,10 @@ currentYearPath = temp.append('path')
     .attr('transform', 'translate(' + (graphSize/2) +','+ (graphSize/2) +')');
 
 yearsAgo = [20, 0];
+
 var scale = d3.scaleLinear()
   .domain(yearsAgo)
-  .range(['#E24F59', '#F5E074']);
+  .range(temperatureColorRange);
 
 temp.append("g")
   .attr("class", "legendLinear")

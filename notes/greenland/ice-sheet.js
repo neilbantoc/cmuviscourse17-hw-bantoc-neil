@@ -16,7 +16,7 @@ var tenYearsFill = '#ffffff';
 var yearsStrokeWidth = '1';
 var yearsAlpha = 0.4;
 
-var greenlandFill = '#69b578';
+var greenlandFill = '#749E3D';
 var iceSheetFill = '#F3F6FB';
 
 var mapStrokeColor = '#000000';
