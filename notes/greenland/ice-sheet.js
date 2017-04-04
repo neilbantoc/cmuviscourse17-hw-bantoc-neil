@@ -92,9 +92,6 @@ yearlyPrediction = svg.append('text')
 var transitionTime = 14500;
 var staggerTime = 500;
 
-// iceSheetAnimation();
-// setInterval(iceSheetAnimation, transitionTime * 2);
-
 animationFunctions.push(iceSheetAnimation);
 
 function iceSheetAnimation(x) {

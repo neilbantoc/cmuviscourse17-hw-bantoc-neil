@@ -282,9 +282,9 @@ radialGraph.append("g")
   });
 
 var legendLinear = d3.legendColor()
-  .shapeWidth(30)
   .orient('horizontal')
   .cells(3)
+  .shapeHeight(28)
   .shapeWidth((graphSize - 20)/3)
   .shapePadding(0)
   .scale(scale);
@@ -335,7 +335,7 @@ function increment(x){
     currentYear[x] = newReading;
   }
 
-  tempBackground.classed('alerting', newReading >= 1.0);
+  tempBackground.classed('alerting', truncate(newReading) >= 1.01);
 
   currentYearPath
     .datum(currentYear)
@@ -397,7 +397,12 @@ tempReadingText = tempReading.append('text')
 
 updateTempReading(false, 0, currentYear[0]);
 
+function truncate(reading){
+  return parseFloat(Math.round((reading) * 100) / 100).toFixed(2);
+}
+
 function updateTempReading(transition, duration, reading) {
+
   length = currentYearPath.node().getTotalLength();
   pos = currentYearPath.node().getPointAtLength(length);
   x = graphSize/2 + pos.x;
@@ -406,5 +411,5 @@ function updateTempReading(transition, duration, reading) {
   updateTemp = transition ? tempReading.transition().duration(duration).ease(d3.easeLinear) : tempReading;
   updateTemp.attr('transform', 'translate(' + x + ', ' + y+')');
 
-  tempReadingText.text(parseFloat(Math.round((reading) * 100) / 100).toFixed(2) + "°");
+  tempReadingText.text(truncate(reading) + "°");
 }

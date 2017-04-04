@@ -21,6 +21,8 @@
         /*background: linear-gradient(40deg, #88BBD7, #63899D);*/
       }
 
+
+
       .pie-label {
         font-size: 1em;
         text-anchor: middle;
@@ -100,7 +102,7 @@
     </g>
     <g id="Group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(1299.000000, 523.000000)">
         <text id="Qeqertarsuaq" class = "map-labels" font-family="Helvetica" font-size="24" font-weight="normal" fill="#000000">
-            <tspan x="19" y="23">Kkarreneapollis</tspan>
+            <tspan x="19" y="23">Qarentarsuaq</tspan>
         </text>
         <circle id="Oval-2" stroke="none" fill="#ffffff" cx="3.5" cy="32.5" r="6"></circle>
     </g>
@@ -413,7 +415,7 @@
 
     <g id="Right-Graphs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(1282.000000, 149.000000)">
         <rect id="Rectangle-3" fill-opacity="0.4" fill="#E9E7E7" x="0" y="0" width="548" height="363"></rect>
-        <rect id="Rectangle-4" fill-opacity="0.4" fill="#E9E7E7" x="3" y="535" width="571" height="319"></rect>
+        <rect id="Rectangle-4" fill-opacity="0.4" fill="#E9E7E7" x="3" y="535" width="332" height="319"></rect>
         <g id="polar-bears" transform="translate(16.000000, 16.000000)">
             <g id="Group-4">
                 <rect id="blowout-water" fill="#285E7C" x="0.927088846" y="37.7012874" width="228.472426" height="292.888709"></rect>
@@ -558,19 +560,22 @@
             </g>
             <polygon id="Path-2" fill-opacity="0.7" fill="#FFFFFF" points="263.073337 330.601933 309.125298 448.889986 356.990752 330.601933"></polygon>
         </g>
-        <g id="Ice-Sheet-Info" transform="translate(18.000000, 551.000000)">
-            <g id="The-town-of-Ilulissa" transform="translate(0.069946, 41.000000)" fill="#EFF3F5" fill-opacity="0.896824049">
-                <rect id="Rectangle-5" x="0.930053711" y="0" width="539" height="246"></rect>
+        <g id="Ice-Sheet-Info" transform="translate(19.000000, 551.000000)">
+            <g id="The-town-of-Ilulissa" transform="translate(1.069946, 41.000000)" fill="#EFF3F5" fill-opacity="0.896824049">
+                <rect id="Rectangle-5" x="0.516576036" y="0" width="299.374628" height="246"></rect>
             </g>
-            <text id="The-town-of-Ilulissa" fill-opacity="0.679036458" fill="#000000" font-family="RobotoCondensed-Regular, Roboto Condensed" font-size="18" font-style="condensed" font-weight="normal" line-spacing="32">
-                <tspan x="25.1280335" y="89">The town of Ilulissat is known for its scenic view of the ice sheets. </tspan>
-                <tspan x="25.1280335" y="121">It was selected to be a UNESCO World Heritage site in 2001. </tspan>
-                <tspan x="25.1280335" y="153">However in the short span of 2008 - 2011, the ice sheet has</tspan>
-                <tspan x="25.1280335" y="185">retracted more than 10 meters. This animation displays how the </tspan>
-                <tspan x="25.1280335" y="217">current trend will further retract the ice sheets, destroying a World </tspan>
-                <tspan x="25.1280335" y="249">Heritage site.</tspan>
+            <text id="The-town-of-Ilulissa" fill-opacity="0.679036458" fill="#000000" font-family="RobotoCondensed-Regular, Roboto Condensed" font-size="16" font-style="condensed" font-weight="normal" line-spacing="24">
+                <tspan x="14.1280335" y="66">The town of Ilulissat is known for its </tspan>
+                <tspan x="14.1280335" y="90">scenic view of the ice sheets. It was </tspan>
+                <tspan x="14.1280335" y="114">selected to be a UNESCO World Heritage </tspan>
+                <tspan x="14.1280335" y="138">site in 2001. However in the short span </tspan>
+                <tspan x="14.1280335" y="162">of 2008 - 2011, the ice sheet has </tspan>
+                <tspan x="14.1280335" y="186">retracted more than 10 meters. This </tspan>
+                <tspan x="14.1280335" y="210">animation displays how the current trend </tspan>
+                <tspan x="14.1280335" y="234">will further retract the ice sheets, </tspan>
+                <tspan x="14.1280335" y="258">destroying a World Heritage site.</tspan>
             </text>
-            <g id="Ilulissat-Ice-Sheet" transform="translate(1.000000, 0.000000)" font-weight="300" font-size="24" font-family="RobotoCondensed-Light, Roboto Condensed" fill="#FFFFFF" font-style="condensed">
+            <g id="Ilulissat-Ice-Sheet" font-weight="300" font-size="24" font-family="RobotoCondensed-Light, Roboto Condensed" fill="#FFFFFF" font-style="condensed">
                 <text>
                     <tspan x="0" y="22">Ilulissat Ice Sheet</tspan>
                 </text>
@@ -610,13 +615,13 @@
       .attr('class', 'header2')
       .attr('x', 20)
       .attr('y', 80)
-      .text('The positive and negative effects of rising global temperature and rapid');
+      .text('The positive and negative effects of rising global temperature and');
 
     svg.append('text')
       .attr('class', 'header2')
       .attr('x', 20)
       .attr('y', 105)
-      .text('ice melting on Greenland\'s geography, economy and biodiversity');
+      .text('rapid ice melting on Greenland\'s geography, economy and biodiversity');
 
       d3.select('#bears').selectAll('circle')
         .attr('fill-opacity', 0);
