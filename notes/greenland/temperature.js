@@ -32,8 +32,6 @@ var baselineRadius = 72;
 var levelOneRadius = baselineRadius + baselineRadius;
 var levelTwoRadius = levelOneRadius + baselineRadius;
 
-var titleHeight = 140;
-
 // Size of graph with padding for text labels
 var graphSize = (levelTwoRadius * 2) + 100;
 
@@ -49,7 +47,12 @@ tempBackground = temp.append('rect')
   .attr('width',  tempWidth)
   .attr('class', 'bounding-box')
 
-radialGraph = temp.append('g').attr('id', 'radial-graph');
+// title
+var titleHeight = 140;
+
+// Radial Graph
+radialGraph = temp.append('g').attr('id', 'radial-graph')
+  .attr('transform', 'translate(0, ' + titleHeight + ')');
 
 // Graph's circles
 radialGraph.append('circle')
@@ -272,7 +275,7 @@ var scale = d3.scaleLinear()
   .domain(yearsAgo)
   .range(temperatureColorRange);
 
-temp.append("g")
+radialGraph.append("g")
   .attr("class", "legendLinear")
   .attr("transform", function () {
     return "translate(" + 10 + "," + (graphSize + 20) + ")";
@@ -286,11 +289,11 @@ var legendLinear = d3.legendColor()
   .shapePadding(0)
   .scale(scale);
 
-temp.select(".legendLinear")
+radialGraph.select(".legendLinear")
   .call(legendLinear);
 
 
-temp.append('text')
+radialGraph.append('text')
   .attr('x', 10)
   .attr('text-anchor', 'start')
   .attr('alignment-baseline', 'hanging')
@@ -375,7 +378,7 @@ function increment(x){
 
 var readingSize = 40;
 
-tempReading = temp.append('g')
+tempReading = radialGraph.append('g')
   .attr('height', readingSize)
   .attr('width', readingSize);
 
@@ -403,5 +406,5 @@ function updateTempReading(transition, duration, reading) {
   updateTemp = transition ? tempReading.transition().duration(duration).ease(d3.easeLinear) : tempReading;
   updateTemp.attr('transform', 'translate(' + x + ', ' + y+')');
 
-  tempReadingText.text(parseFloat(Math.round((10 + reading) * 100) / 100).toFixed(2) + "°");
+  tempReadingText.text(parseFloat(Math.round((reading) * 100) / 100).toFixed(2) + "°");
 }
